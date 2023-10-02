@@ -1,0 +1,116 @@
+# Default values for fin-pay-transparency.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+nameOverride: ""
+fullnameOverride: ""
+global:
+  secrets:
+    databasePassword: ~
+    databaseName: ~
+    databaseUser: ~
+    annotation:
+      helm.sh/policy: "keep"
+  zone: ~ # it is required, could be pr-123, dev, test, prod
+  domain: "apps.silver.devops.gov.bc.ca" # it is required, apps.silver.devops.gov.bc.ca for silver cluster
+
+metabase:
+  enabled: true
+  replicaCount: 1
+  nameOverride: ""
+  fullnameOverride: ""
+  image:
+    repository: ghcr.io/bcgov/nr-metabase/metabase
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ~
+  containerPort: 3000
+  environment: production
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+  resources:
+    limits:
+      cpu: 750m
+      memory: 1250Mi
+    requests:
+      cpu: 150m
+      memory: 500Mi
+
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  imagePullSecrets: [ ]
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+
+database:
+  enabled: true
+  replicaCount: 1
+  nameOverride: ""
+  fullnameOverride: ""
+  image:
+    repository: ghcr.io/bcgov/quickstart-openshift/database
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: 'prod'
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  imagePullSecrets: [ ]
+  autoscaling:
+    enabled: false
+  service:
+    type: ClusterIP
+    port: 5432
+    targetPort: 5432
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1250Mi
+    requests:
+      cpu: 150m
+      memory: 500Mi
+  persistence:
+    enabled: true
+    size: 512Mi
+    accessMode: ReadWriteMany
+    storageClass: netapp-file-standard
+
+backup:
+  enabled: true
+  nameOverride: ""
+  fullnameOverride: ""
+  image:
+    repository: bcgovimages/backup-container
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: latest
+  persistence:
+    accessModes:
+      - ReadWriteOnce
+    mountPath: "/backups/"
+    size: 256Mi #Volume space available for data, e.g. 512Mi, 2Gi.
+    storageClass: "netapp-block-standard"
+  schedule: "0 0 * * *" # cron job schedule
+  strategy: "rolling" # daily or rolling
+  numBackups: 5 # The number of backup files to be retained.  Used for the `daily` backup strategy.  Ignored when using the `rolling` backup strategy.
+  dailyBackups: 7 # The number of daily backup files to be retained.  Used for the `rolling` backup strategy.
+  weeklyBackups: 4 # The number of weekly backup files to be retained.  Used for the `rolling` backup strategy.
+  monthlyBackups: 1 # The number of monthly backup files to be retained.  Used for the `rolling` backup strategy.
+
+  serviceAccount: default # "Name of the Service Account To Execute the Job As."
+  successHistoryLimit: 5 # "The number of successful jobs that will be retained"
+  failedHistoryLimit: 2 # "The number of failed jobs that will be retained"
+  backoffLimit: 0 # "The number of attempts to try for a successful job outcome"
+  resources:
+    limits:
+      cpu: 150m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 128Mi
