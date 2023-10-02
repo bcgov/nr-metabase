@@ -1,59 +1,30 @@
 name: semantic release
 
 on:
+  workflow_run:
+    workflows: [ Pull Request Closed ]
+    types: [ completed ]
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
-  semantic-release:
+  helm-release:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Conventional Changelog Update
-        uses: TriPSs/conventional-changelog-action@v3
-        id: changelog
-        continue-on-error: true
-        with:
-          github-token: ${{ github.token }}
-          output-file: 'CHANGELOG.md'
-          skip-version-file: 'true'
-          skip-commit: 'true'
-          skip-on-empty: 'false'
-          git-push: 'true'
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        if: ${{ steps.changelog.outputs.version != '' }}
-        continue-on-error: true
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.5.0
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          token: ${{ github.token }}
-          tag_name:  ${{ steps.changelog.outputs.tag }}
-          name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
-
-      - name: Tag Docker Image for app container
-        uses: shrink/actions-docker-registry-tag@v3
-        if: ${{ steps.changelog.outputs.version != '' }}
-        with:
-          registry: ghcr.io
-          repository: ${{ github.repository }}/nr-oracle-service
-          target: test
-          tags: ${{ steps.changelog.outputs.version }}
-
-      - name: Tag Docker Image for init container
-        uses: shrink/actions-docker-registry-tag@v3
-        if: ${{ steps.changelog.outputs.version != '' }}
-        with:
-          registry: ghcr.io
-          repository: ${{ github.repository }}/nr-oracle-service-init
-          target: test
-          tags: ${{ steps.changelog.outputs.version }}
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
 

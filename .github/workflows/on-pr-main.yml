@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - 'charts/**'
 
 concurrency:
   # PR open and close use the same group, allowing only one at a time
@@ -13,42 +11,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  extract_version:
+    name: Extract Version
+    if: '!github.event.pull_request.head.repo.fork'
+    runs-on: ubuntu-22.04
+    outputs:
+      app_version: ${{ steps.read_yaml.outputs.app_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Extract Version
+        id: read_yaml
+        uses: actions/yaml@v1
+        with:
+          path: charts/nr-metabase/Chart.yaml
+      - name: Get App Version
+        run: echo "${{ steps.read_yaml.outputs.app_version }}"
+
   builds:
     name: Builds
+    needs: extract_version
     if: '!github.event.pull_request.head.repo.fork'
     runs-on: ubuntu-22.04
     permissions:
       packages: write
-    strategy:
-      matrix:
-        package: [nr-oracle-service, nr-oracle-service-init]
-        include:
-          - package: nr-oracle-service
-            build_file: Dockerfile
-            build_context: .
-            triggers: ('src/' 'pom.xml')
-          - package: nr-oracle-service-init
-            build_file: Dockerfile.certs
-            build_context: .
-            triggers: ('get_certs.sh' 'Dockerfile.certs')
-
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: bcgov-nr/action-builder-ghcr@v1.1.2
+      - uses: bcgov-nr/action-builder-ghcr@v1.2.1
         with:
-          package: ${{ matrix.package }}
+          package: nr-metabase
           tag: ${{ github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          build_file: ${{ matrix.build_file }}
-          build_context: ${{ matrix.build_context }}
-          triggers: ${{ matrix.triggers }}
+          build_args: |
+            METABASE_VERSION=${{ needs.extract_version.outputs.app_version }}
       - uses: shrink/actions-docker-registry-tag@v3
         with:
           registry: ghcr.io
-          repository: ${{ github.repository }}/${{ matrix.package }}
+          repository: ${{ github.repository }}/nr-metabase
           target: ${{ github.sha }}
-          tags: pr-${{ github.event.number }}
+          tags: |
+            pr-${{ github.event.number }}
+            ${{ needs.extract_version.outputs.app_version }}
+
 
 
 
@@ -70,4 +74,4 @@ jobs:
           oc project ${{ vars.oc_namespace }}
           
           # Deploy Helm Chart
-          helm upgrade --install --wait --atomic nr-oracle-service-${{ github.event.number }}  --set nameOverride=nr-oracle-service-${{ github.event.number }} --set image.tag=pr-${{ github.event.number }} --set app.envs.DB_HOST=${{ secrets.DB_HOST }} --set app.envs.DB_NAME=${{ secrets.DB_NAME }} --set app.envs.DB_PASSWORD=${{ secrets.DB_PASSWORD }} --set app.envs.DB_USER=${{ secrets.DB_USER }} --set image.repository=ghcr.io/${{ github.repository }}/nr-oracle-service --set image.repositoryInit=ghcr.io/${{ github.repository }}/nr-oracle-service-init --set namespace=${{ vars.oc_namespace }}  --timeout 10m charts/nr-oracle-service --debug
+          helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} --set-string global.databasePassword=${{ secrets.db_password}} --set global.zone="${{ github.event.number }}"   --set metabase.image.tag=${{ github.sha }}  --set namespace=${{ vars.oc_namespace }}  --timeout 10m charts/nr-metabase --debug

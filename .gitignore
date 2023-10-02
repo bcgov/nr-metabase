@@ -23,3 +23,5 @@
 hs_err_pid*
 replay_pid*
 !ojdbc8-full/**
+!InstallCert.class
+!Install

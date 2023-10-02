@@ -26,7 +26,7 @@ jobs:
           oc project ${{ vars.OC_NAMESPACE }}
 
           # Remove old build runs, build pods and deployment pods
-          helm uninstall nr-oracle-service-${{ github.event.number }}
+          helm uninstall nr-metabase-${{ github.event.number }}
 
   # If merged into main, then handle any image promotions
   image-promotions:
@@ -37,7 +37,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        package: [nr-oracle-service, nr-oracle-service-init]
+        package: [nr-metabase]
     steps:
       - uses: shrink/actions-docker-registry-tag@v3
         with:

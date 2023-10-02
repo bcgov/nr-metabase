@@ -1,5 +1,5 @@
 #This Dockerfile mounts the certs
-FROM eclipse-temurin:17-jdk
+FROM docker.io/openjdk:17-alpine
 WORKDIR /app
 COPY /ojdbc8-full/ /app/plugins/
 ARG METABASE_VERSION
@@ -9,9 +9,11 @@ ENV FC_LANG=en-US \
 RUN apk add --update --no-cache bash curl wget ttf-dejavu fontconfig
 RUN wget -q https://downloads.metabase.com/${METABASE_VER}/metabase.jar \
 && chmod -R 777 /app
-
+COPY InstallCert.class .
+COPY "InstallCert\$SavingTrustManager.class" .
 COPY run_app.sh .
-RUN chmod -R 777 /opt && chmod -R 777 /etc
+RUN chmod +x run_app.sh
+RUN chmod -R 777 /opt
 EXPOSE 3000
 USER 185
-ENTRYPOINT ["sh", "run_app.sh"]
+ENTRYPOINT ["./run_app.sh"]
