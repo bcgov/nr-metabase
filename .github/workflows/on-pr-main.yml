@@ -22,9 +22,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Extract Version
         id: read_yaml
-        uses: actions/yaml@v1
+        uses: pietrobolcato/action-read-yaml@1.0.0
         with:
-          path: charts/nr-metabase/Chart.yaml
+          config: ${{ github.workspace }}/charts/nr-metabase/Chart.yaml
       - name: Get App Version
         run: echo "${{ steps.read_yaml.outputs.app_version }}"
 
