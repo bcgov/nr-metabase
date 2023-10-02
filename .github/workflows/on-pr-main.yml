@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Extract Version
         id: read_yaml
-        run: echo "app_version::$(yq r charts/nr-metabase/Chart.yaml 'appVersion')" >> "$GITHUB_OUTPUT"
+        run: echo "app_version=$(yq '.appVersion' charts/nr-metabase/Chart.yaml )" >> "$GITHUB_OUTPUT"
       - name: Get App Version
         run: echo "${{ steps.read_yaml.outputs.appVersion }}"
 
