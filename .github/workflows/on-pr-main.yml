@@ -16,15 +16,13 @@ jobs:
     if: '!github.event.pull_request.head.repo.fork'
     runs-on: ubuntu-22.04
     outputs:
-      app_version: ${{ steps.read_yaml.outputs.appVersion }}
+      app_version: ${{ steps.read_yaml.outputs.app_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Extract Version
         id: read_yaml
-        uses: pietrobolcato/action-read-yaml@1.0.0
-        with:
-          config: ${{ github.workspace }}/charts/nr-metabase/Chart.yaml
+        run: echo "app_version::$(yq r charts/nr-metabase/Chart.yaml 'appVersion')" >> "$GITHUB_OUTPUT"
       - name: Get App Version
         run: echo "${{ steps.read_yaml.outputs.appVersion }}"
 
