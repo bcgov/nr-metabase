@@ -32,7 +32,7 @@ jobs:
   builds:
     name: Builds
     needs: extract_version
-    if: '!github.event.pull_request.head.repo.fork && needs.extract_version.outputs.app_version != ""'
+    if: '!github.event.pull_request.head.repo.fork && needs.extract_version.outputs.app_version != '''
     runs-on: ubuntu-22.04
     permissions:
       packages: write
