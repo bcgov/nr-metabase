@@ -50,13 +50,12 @@ jobs:
           package: metabase
           tag: ${{ github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          build_file: Dockerfile
           build_args: |
             METABASE_VERSION=${{ needs.extract_version.outputs.app_version }}
       - uses: shrink/actions-docker-registry-tag@v3
         with:
           registry: ghcr.io
-          repository: ${{ github.repository }}/nr-metabase
+          repository: ${{ github.repository }}/metabase
           target: ${{ github.sha }}
           tags: |
             pr-${{ github.event.number }}
