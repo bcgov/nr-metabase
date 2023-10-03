@@ -45,6 +45,8 @@ jobs:
         if: steps.check.outputs.build == 'true'
         id: modify_files
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           appVersion=${{ steps.set-result.outputs.result }}
           version=${appVersion//v/}
