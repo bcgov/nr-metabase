@@ -1,6 +1,8 @@
 name: Pull Request Closed
 
 on:
+  workflow_dispatch:
+    
   pull_request:
     branches:
       - main
@@ -28,20 +30,3 @@ jobs:
           # Remove old build runs, build pods and deployment pods
           helm uninstall nr-metabase-${{ github.event.number }}
 
-  # If merged into main, then handle any image promotions
-  image-promotions:
-    name: Image Promotions
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
-    runs-on: ubuntu-22.04
-    permissions:
-      packages: write
-    strategy:
-      matrix:
-        package: [nr-metabase]
-    steps:
-      - uses: shrink/actions-docker-registry-tag@v3
-        with:
-          registry: ghcr.io
-          repository: ${{ github.repository }}/${{ matrix.package }}
-          target: pr-${{ github.event.number }}
-          tags: test
