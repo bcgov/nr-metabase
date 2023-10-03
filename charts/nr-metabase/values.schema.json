@@ -1,0 +1,437 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "nameOverride": {
+      "type": "string"
+    },
+    "fullnameOverride": {
+      "type": "string"
+    },
+    "global": {
+      "type": "object",
+      "properties": {
+        "secrets": {
+          "type": "object",
+          "properties": {
+            "databasePassword": {
+              "type": "string",
+              "description": "A 16 character password for the database user, numbers and letters only."
+            },
+            "databaseName": {
+              "type": "string",
+              "default": "metabase"
+            },
+            "databaseUser": {
+              "type": "string",
+              "default": "metabase"
+            },
+            "annotation": {
+              "type": "object",
+              "properties": {
+                "helm.sh/policy": {
+                  "type": "string",
+                  "enum": [
+                    "keep"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "zone": {
+          "type": "string",
+          "default": "prod"
+        },
+        "domain": {
+          "type": "string",
+          "default": "apps.silver.devops.gov.bc.ca"
+        }
+      }
+    },
+    "metabase": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "replicaCount": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "nameOverride": {
+          "type": "string"
+        },
+        "fullnameOverride": {
+          "type": "string"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "default": "ghcr.io/bcgov/nr-metabase/metabase"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "Always"
+            },
+            "tag": {
+              "type": "string",
+              "default": "v0.47.1"
+            }
+          }
+        },
+        "containerPort": {
+          "type": "integer",
+          "default": 3000
+        },
+        "environment": {
+          "type": "string",
+          "default": "production"
+        },
+        "service": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "default": "ClusterIP"
+            },
+            "port": {
+              "type": "integer",
+              "default": 80
+            },
+            "targetPort": {
+              "type": "integer",
+              "default": 3000
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "default": "750m"
+                },
+                "memory": {
+                  "type": "string",
+                  "default": "1250Mi"
+                }
+              }
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "default": "150m"
+                },
+                "memory": {
+                  "type": "string",
+                  "default": "500Mi"
+                }
+              }
+            }
+          }
+        },
+        "autoscaling": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "podAnnotations": {
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "type": "object"
+        },
+        "securityContext": {
+          "type": "object"
+        },
+        "imagePullSecrets": {
+          "type": "array"
+        },
+        "nodeSelector": {
+          "type": "object"
+        },
+        "tolerations": {
+          "type": "array"
+        },
+        "affinity": {
+          "type": "object"
+        }
+      }
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "replicaCount": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "nameOverride": {
+          "type": "string"
+        },
+        "fullnameOverride": {
+          "type": "string"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "default": "ghcr.io/bcgov/quickstart-openshift/database"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "Always"
+            },
+            "tag": {
+              "type": "string",
+              "default": "prod"
+            }
+          }
+        },
+        "podAnnotations": {
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "type": "object"
+        },
+        "securityContext": {
+          "type": "object"
+        },
+        "imagePullSecrets": {
+          "type": "array"
+        },
+        "autoscaling": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "service": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "default": "ClusterIP"
+            },
+            "port": {
+              "type": "integer",
+              "default": 5432
+            },
+            "targetPort": {
+              "type": "integer",
+              "default": 5432
+            }
+          }
+        },
+        "nodeSelector": {
+          "type": "object"
+        },
+        "tolerations": {
+          "type": "array"
+        },
+        "affinity": {
+          "type": "object"
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "default": "500m"
+                },
+                "memory": {
+                  "type": "string",
+                  "default": "1250Mi"
+                }
+              }
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "default": "150m"
+                },
+                "memory": {
+                  "type": "string",
+                  "default": "500Mi"
+                }
+              }
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "size": {
+              "type": "string",
+              "default": "512Mi"
+            },
+            "accessMode": {
+              "type": "string",
+              "default": "ReadWriteMany"
+            },
+            "storageClass": {
+              "type": "string",
+              "default": "netapp-file-standard"
+            }
+          }
+        }
+      }
+    },
+    "backup": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "nameOverride": {
+          "type": "string"
+        },
+        "fullnameOverride": {
+          "type": "string"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "default": "bcgovimages/backup-container"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "Always"
+            },
+            "tag": {
+              "type": "string",
+              "default": "latest"
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "properties": {
+            "accessModes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ReadWriteOnce"
+                ]
+              }
+            },
+            "mountPath": {
+              "type": "string",
+              "default": "/backups/"
+            },
+            "size": {
+              "type": "string",
+              "default": "256Mi"
+            },
+            "storageClass": {
+              "type": "string",
+              "default": "netapp-block-standard"
+            }
+          }
+        },
+        "schedule": {
+          "type": "string",
+          "default": "0 0 * * *"
+        },
+        "strategy": {
+          "type": "string",
+          "default": "rolling",
+          "enum": [
+            "daily",
+            "rolling"
+          ]
+        },
+        "numBackups": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 5
+        },
+        "dailyBackups": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 7
+        },
+        "weeklyBackups": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 4
+        },
+        "monthlyBackups": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "serviceAccount": {
+          "type": "string",
+          "default": "default"
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "default": "500m"
+                },
+                "memory": {
+                  "type": "string",
+                  "default": "1250Mi"
+                }
+              }
+            },
+            "requests": {
+              "type": "object",
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "default": "150m"
+                },
+                "memory": {
+                  "type": "string",
+                  "default": "500Mi"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
