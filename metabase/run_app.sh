@@ -18,4 +18,4 @@ echo "Adding certs"
   done
 
 echo "Starting Metabase"
-java -jar metabase.jar
+java -jar metabase.jar migrate release-locks
