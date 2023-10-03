@@ -55,7 +55,7 @@ jobs:
           yq eval '.metabase.image.tag = $appVersion' -i charts/nr-metabase/values.yaml
           git add charts/nr-metabase/values.yaml charts/nr-metabase/Chart.yaml
           git commit -m "Updating the version of the metabase image to $appVersion"
-          git push origin chore/ministry-name-schema
+          git push origin deps/metabase-version-update-$appVersion
           # Create a Pull Request
           gh pr create --assignee "mishraomp" --base main --label "dependencies" --title "Updating the version of the metabase image to $appVersion" --body "Updating the version of the metabase image to $appVersion."
       
