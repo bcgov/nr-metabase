@@ -20,10 +20,6 @@ spec:
       labels:
         {{- include "metabase.selectorLabels" . | nindent 8 }}
     spec:
-      volumes:
-        - name: {{ include "metabase.fullname" . }}
-          persistentVolumeClaim:
-            claimName: {{ include "metabase.fullname" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -81,9 +77,7 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-            - mountPath: /app/sessions
-              name: {{ include "metabase.fullname" . }}
+          
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
