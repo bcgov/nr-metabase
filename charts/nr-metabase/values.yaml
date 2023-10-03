@@ -35,7 +35,8 @@ metabase:
     requests:
       cpu: 150m
       memory: 500Mi
-
+  autoscaling:
+    enabled: false
   podAnnotations: { }
   podSecurityContext: { }
   securityContext: { }
