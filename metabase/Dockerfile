@@ -8,7 +8,7 @@ ENV FC_LANG=en-US \
   LC_CTYPE=en_US.UTF-8
 RUN apt-get update && apt-get install -y --no-install-recommends \
 # packages for your application
-bash curl wget ttf-dejavu fontconfig \
+bash curl wget \
 && rm -rf /var/lib/apt/lists/*
 RUN wget -q https://downloads.metabase.com/${METABASE_VER}/metabase.jar \
 && chmod -R 777 /app
