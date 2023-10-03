@@ -15,7 +15,7 @@
           "type": "object",
           "properties": {
             "databasePassword": {
-              "type": "string",
+              "type": ["string","null"],
               "description": "A 16 character password for the database user, numbers and letters only."
             },
             "databaseName": {
