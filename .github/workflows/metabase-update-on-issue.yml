@@ -18,6 +18,7 @@ jobs:
         uses: zentered/issue-forms-body-parser@v2.1.4
 
       - name: Stringify Result
+        if: ${{ steps.parse.outputs.data != "" }}
         uses: actions/github-script@v6
         id: set-result
         with:
