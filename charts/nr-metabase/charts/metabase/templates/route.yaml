@@ -5,7 +5,7 @@ metadata:
     {{- include "metabase.labels" . | nindent 4 }}
   name: {{ include "metabase.fullname" . }}
 spec:
-  host: {{ include "metabase.fullname" . }}.{{ include .Release.Namespace . }}.{{ .Values.global.domain }}
+  host: {{ include "metabase.route" . }}
   port:
     targetPort: http
   to:

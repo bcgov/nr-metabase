@@ -22,7 +22,15 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 {{- end }}
+{{- define "metabase.route" -}}
+{{- if .Values.routeOverride }}
+{{- .Values.routeOverride }}
+{{- else }}
+{{- printf "%s-%s.%s" .Release.Name .Values.global.zone .Values.global.domain  }}
+{{- end }}
+{{- end }}
 
+{{/*
 {{/*
 Create chart name and version as used by the chart label.
 */}}
