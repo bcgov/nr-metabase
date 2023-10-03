@@ -1,0 +1,9 @@
+name: Update Metabase Version in Helm Chart.
+description: Please provide the version of the metabase image to be build. sample format is v0.43.1
+body:
+  - type: input
+    id: METABASE_VERSION
+    attributes:
+      label: Metabase Version
+    validations:
+      required: true
