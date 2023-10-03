@@ -51,6 +51,7 @@ jobs:
           tag: ${{ github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           build_context: .
+          build_file: Dockerfile
           build_args: |
             METABASE_VERSION=${{ needs.extract_version.outputs.app_version }}
       - uses: shrink/actions-docker-registry-tag@v3
