@@ -9,7 +9,7 @@ global:
     databaseUser: 'metabase'
     annotation:
       helm.sh/policy: "keep"
-  zone: ~ # it is required, could be pr-123, dev, test, prod
+  zone: 'prod' # it is required, could be pr-123, dev, test, prod
   domain: "apps.silver.devops.gov.bc.ca" # it is required, apps.silver.devops.gov.bc.ca for silver cluster
 metabase:
   enabled: true
@@ -20,7 +20,7 @@ metabase:
     repository: ghcr.io/bcgov/nr-metabase/metabase
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 'v0.47.1'
+    tag: 'v0.47.2'
   containerPort: 3000
   environment: production
   service:
