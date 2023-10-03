@@ -1,7 +1,7 @@
 #This Dockerfile mounts the certs
 FROM docker.io/openjdk:17-alpine
 WORKDIR /app
-COPY /metabase/ojdbc8-full /app/plugins/
+COPY ojdbc8-full /app/plugins/
 ARG METABASE_VERSION
 ENV METABASE_VER=$METABASE_VERSION
 ENV FC_LANG=en-US \
