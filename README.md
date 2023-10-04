@@ -14,3 +14,6 @@ A Helm Chart to deploy a Metabase Instance with Encrypted Listener Support to do
 9. You should see `metabase` in the list, click on it.![img.png](.graphics/metabase_logo.png)
 10. Click on the Nr Metabase and then install Helm Chart button.
 11. Select Chart version, which is same as metabase version, for example: `0.47.1` and click on Install button.
+
+## How to Enable LDAP integration with metabase.
+[.] Follow this [link](https://apps.nrs.gov.bc.ca/int/confluence/display/OPTIMIZE/LDAP+Integration), It is  (IDIR) protected to setup Metabase with LDAP login. once completed use the email address associated with IDIR to log in to Metabase
