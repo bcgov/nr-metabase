@@ -48,7 +48,7 @@ spec:
                 - name: DEFAULT_PORT
                   value: "5432"
                 - name: POSTGRESQL_DATABASE
-                  value: "fin-pay-transparency"
+                  value: "metabase"
                 - name: DATABASE_USER
                   valueFrom:
                     secretKeyRef:
