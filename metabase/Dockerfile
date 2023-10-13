@@ -2,7 +2,7 @@
 FROM docker.io/openjdk:21-jdk-slim-bullseye
 WORKDIR /app
 COPY ojdbc8-full /app/plugins/
-ARG METABASE_VERSION
+ARG METABASE_VERSION=v0.47.2
 ENV METABASE_VER=$METABASE_VERSION
 ENV FC_LANG=en-US \
   LC_CTYPE=en_US.UTF-8

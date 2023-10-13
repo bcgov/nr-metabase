@@ -63,6 +63,9 @@ spec:
               value: 0.0.0.0
             - name: MB_PASSWORD_COMPLEXITY
               value: strong
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-{{ .Values.global.zone }}
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}

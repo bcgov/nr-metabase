@@ -23,6 +23,7 @@ metabase:
     tag: 'v0.47.2'
   containerPort: 3000
   environment: production
+
   service:
     type: ClusterIP
     port: 80
