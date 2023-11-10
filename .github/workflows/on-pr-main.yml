@@ -90,4 +90,4 @@ jobs:
           --set-string global.zone="${{ github.event.number }}"   \
           --set-string metabase.image.tag=${{ github.sha }}  \
           --set namespace=${{ vars.oc_namespace }}  \
-          --timeout 5m charts/nr-metabase --debug
+          --timeout 5m --debug .
