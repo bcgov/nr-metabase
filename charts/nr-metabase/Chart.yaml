@@ -27,7 +27,7 @@ dependencies:
     condition: bitnami-pg.enabled
     version: 13.2.3
     repository: https://charts.bitnami.com/bitnami
-    alias: database
+    alias: bitnami-pg
   - name: backup
     condition: backup.enabled
     version: 0.1.0
