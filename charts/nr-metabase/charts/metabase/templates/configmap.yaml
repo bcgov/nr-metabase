@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metabase.fullname" . }}
+  labels:
+    {{- include "metabase.labels" . | nindent 4 }}
+data:
+  log4j2.xml: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <Configuration>
+        <Appenders>
+          <Console name="STDOUT" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%date %level %logger{2} :: %message%n%throwable">
+              <replace regex=":basic-auth \\[.*\\]" replacement=":basic-auth [redacted]"/>
+            </PatternLayout>
+          </Console>
+        </Appenders>
+        <Loggers>
+          <Logger name="metabase" level="TRACE"/>
+          <Logger name="metabase-enterprise" level="TRACE"/>
+          <Logger name="metabase.metabot" level="DEBUG"/>
+          <Logger name="metabase.plugins" level="TRACE"/>
+          <Logger name="metabase.server.middleware" level="DEBUG"/>
+          <Logger name="metabase.query-processor.async" level="DEBUG"/>
+          <Logger name="com.mchange" level="ERROR"/>
+          <Logger name="org.quartz" level="INFO"/>
+          <Logger name="liquibase" level="ERROR"/>
+          <Logger name="net.snowflake.client.jdbc.SnowflakeConnectString" level="ERROR"/>
+
+          <Root level="TRACE">
+            <AppenderRef ref="STDOUT"/>
+          </Root>
+        </Loggers>
+      </Configuration>
+

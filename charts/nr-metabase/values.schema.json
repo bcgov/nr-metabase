@@ -433,5 +433,7 @@
         }
       }
     }
-  }
+  },
+  "additionalItems": true,
+  "additionalProperties": true
 }
