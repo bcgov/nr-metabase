@@ -45,39 +45,43 @@ metabase:
   affinity: {}
 database:
   enabled: true
-  replicaCount: 1
-  nameOverride: ""
-  fullnameOverride: ""
   image:
-    repository: ghcr.io/bcgov/quickstart-openshift/database
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: 'prod'
-  podAnnotations: {}
-  podSecurityContext: {}
-  securityContext: {}
-  imagePullSecrets: []
-  autoscaling:
+    registry: ghcr.io
+    repository: bcgov/nr-containers/bitnami/postgresql
+    tag: 15.4.0
+  auth:
+    existingSecret: '{{ .Release.Name }}'
+    username: '{{.Values.global.secrets.databaseUser}}'
+    database: '{{.Values.global.secrets.databaseName}}'
+  shmVolume:
     enabled: false
-  service:
-    type: ClusterIP
-    port: 5432
-    targetPort: 5432
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  resources:
-    limits:
-      cpu: 500m
-      memory: 1250Mi
-    requests:
-      cpu: 150m
-      memory: 500Mi
-  persistence:
-    enabled: true
-    size: 512Mi
-    accessMode: ReadWriteMany
-    storageClass: netapp-file-standard
+  backup:
+    enabled: false
+    cronjob:
+      containerSecurityContext: { }
+      podSecurityContext:
+        enabled: false
+      storage:
+        size: 200Mi
+  primary:
+    persistence:
+      enabled: true
+      storageClass: netapp-file-standard
+      accessModes:
+        - ReadWriteOnce
+      size: 512Mi
+    containerSecurityContext:
+      enabled: false
+    podSecurityContext:
+      enabled: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 150Mi
+      limits:
+        cpu: 150m
+        memory: 250Mi
+
 backup:
   enabled: true
   nameOverride: ""

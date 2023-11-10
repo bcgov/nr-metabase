@@ -23,9 +23,11 @@ dependencies:
   - name: metabase
     condition: metabase.enabled
     version: 0.1.0
-  - name: database
-    condition: database.enabled
-    version: 0.1.0
+  - name: postgresql
+    condition: bitnami-pg.enabled
+    version: 13.2.3
+    repository: https://charts.bitnami.com/bitnami
+    alias: database
   - name: backup
     condition: backup.enabled
     version: 0.1.0
