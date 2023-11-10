@@ -85,6 +85,9 @@ spec:
             failureThreshold: 50
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -98,3 +101,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "metabase.fullname" . }}

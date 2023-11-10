@@ -18,4 +18,4 @@ echo "Adding certs"
   done
 
 echo "Starting Metabase"
-java -jar metabase.jar
+java -Dlog4j.configurationFile=file:/opt/log4j2.xml -jar metabase.jar
