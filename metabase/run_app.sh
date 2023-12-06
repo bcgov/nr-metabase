@@ -1,8 +1,13 @@
 #!/bin/bash
-DB_HOST_PORT_LIST=nrcdb01.bcgov:1543,nrcdb03.bcgov:1543,nrkdb01.bcgov:1543,nrkdb03.bcgov:1543
+DB_HOST_PORT_ENV=${DB_HOST_PORT_ENV}
+echo "DB_HOST_PORT_ENV is $DB_HOST_PORT_ENV"
+if [ -z "$DB_HOST_PORT_ENV" ]; then
+  DB_HOST_PORT_ENV=nrcdb01.bcgov:1543,nrcdb03.bcgov:1543,nrkdb01.bcgov:1543,nrkdb03.bcgov:1543,nrcdb02.bcgov:1543,nrkdb02.bcgov:1543
+fi
+echo "DB_HOST_PORT_ENV is $DB_HOST_PORT_ENV"
 echo "Adding certs"
   IFS=','
-  read -ra DB_HOST_PORT_ARRAY <<< "${DB_HOST_PORT_LIST}"
+  read -ra DB_HOST_PORT_ARRAY <<< "${DB_HOST_PORT_ENV}"
   for DB_HOST_PORT in "${DB_HOST_PORT_ARRAY[@]}"; do
     IFS=':'
     read -ra strarr <<<"${DB_HOST_PORT}"
