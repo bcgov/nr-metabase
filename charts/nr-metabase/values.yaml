@@ -49,10 +49,10 @@ database:
   nameOverride: ""
   fullnameOverride: ""
   image:
-    repository: ghcr.io/bcgov/quickstart-openshift/database
+    repository: ghcr.io/bcgov/nr-containers/postgres
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 'prod'
+    tag: '15.5'
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
