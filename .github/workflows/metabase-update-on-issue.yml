@@ -56,6 +56,7 @@ jobs:
           yq eval '.appVersion = $appVersion' -i charts/nr-metabase/Chart.yaml
           yq eval '.version = $version' -i charts/nr-metabase/Chart.yaml
           yq eval '.metabase.image.tag = $appVersion' -i charts/nr-metabase/values.yaml
+          yq eval '.global.appVersion = $appVersion' -i charts/nr-metabase/values.yaml
           git add charts/nr-metabase/values.yaml charts/nr-metabase/Chart.yaml
           git commit -m "Updating the version of the metabase image to $appVersion"
           git push origin deps/metabase-version-update-$appVersion

@@ -46,6 +46,9 @@
         "domain": {
           "type": "string",
           "default": "apps.silver.devops.gov.bc.ca"
+        },
+        "appVersion":{
+          "type": "string"
         }
       }
     },
