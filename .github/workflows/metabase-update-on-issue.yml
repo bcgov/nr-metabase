@@ -15,7 +15,7 @@ jobs:
 
       - name: Issue Forms Body Parser
         id: parse
-        uses: zentered/issue-forms-body-parser@v2.1.4
+        uses: zentered/issue-forms-body-parser@v2.2.0
 
       - name: Stringify Result
         if: ${{ steps.parse.outputs.data != "" }}
