@@ -5,15 +5,15 @@ metadata:
   labels:
     {{- include "metabase.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  {{- if not .Values.metabase.autoscaling.enabled }}
+  replicas: {{ .Values.metabase.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
       {{- include "metabase.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.metabase.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -21,13 +21,13 @@ spec:
         {{- include "metabase.selectorLabels" . | nindent 8 }}
     spec:
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.metabase.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ include "metabase.fullname" . }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "image-registry.openshift-image-registry.svc:5000/{{.Release.Namespace}}/{{ include "metabase.fullname" . }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values.metabase.securityContext | nindent 12 }}
+          image: "image-registry.openshift-image-registry.svc:5000/{{.Release.Namespace}}/{{ include "metabase.fullname" . }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.metabase.image.pullPolicy }}
           env:
             - name: MB_DB_DBNAME
               valueFrom:
@@ -65,7 +65,7 @@ spec:
               value: strong
           ports:
             - name: http
-              containerPort: {{ .Values.service.targetPort }}
+              containerPort: {{ .Values.metabase.service.targetPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -84,17 +84,17 @@ spec:
             timeoutSeconds: 3
             failureThreshold: 50
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.metabase.resources | nindent 12 }}
 
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.metabase.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.metabase.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.metabase.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

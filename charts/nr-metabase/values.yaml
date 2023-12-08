@@ -20,8 +20,6 @@ metabase:
   image:
     repository: ghcr.io/bcgov/nr-metabase/metabase
     pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: 'v0.47.2'
   containerPort: 3000
   environment: production
   service:

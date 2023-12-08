@@ -9,9 +9,9 @@ spec:
   lookupPolicy:
     local: false
   tags:
-    - name: "{{ .Values.global.appVersion }}"
+    - name: "{{ .Chart.AppVersion }}"
       from:
         kind: DockerImage
-        name: "{{ .Values.image.repository }}:{{ .Values.global.appVersion }}"
+        name: "{{ .Values.metabase.image.repository }}:{{ .Chart.AppVersion }}"
       referencePolicy:
         type: Local
