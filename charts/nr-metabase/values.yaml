@@ -11,6 +11,7 @@ global:
       helm.sh/policy: "keep"
   zone: 'prod' # it is required, could be pr-123, dev, test, prod
   domain: "apps.silver.devops.gov.bc.ca" # it is required, apps.silver.devops.gov.bc.ca for silver cluster
+  appVersion: 0.47.9
 metabase:
   enabled: true
   replicaCount: 1

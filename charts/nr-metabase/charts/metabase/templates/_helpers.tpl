@@ -26,7 +26,7 @@ If release name contains chart name it will be used as a full name.
 {{- if .Values.routeOverride }}
 {{- .Values.routeOverride }}
 {{- else }}
-{{- printf "%s-%s.%s" .Release.Name .Values.global.zone .Values.global.domain  }}
+{{- printf "%s-metabase-%s-%s.%s" .Release.Name .Values.global.zone .Release.Namespace .Values.global.domain  }}
 {{- end }}
 {{- end }}
 
