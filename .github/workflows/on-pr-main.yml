@@ -45,7 +45,7 @@ jobs:
       packages: write
 
     steps:
-      - uses: bcgov-nr/action-builder-ghcr@v1.3.0
+      - uses: bcgov-nr/action-builder-ghcr@v2.0.1
         with:
           package: metabase
           tag: ${{ github.sha }}
@@ -70,7 +70,7 @@ jobs:
       - builds
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Deploy to OpenShift
         shell: bash
         run: |
