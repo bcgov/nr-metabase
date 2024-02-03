@@ -11,7 +11,7 @@ global:
       helm.sh/policy: "keep"
   zone: 'prod' # it is required, could be pr-123, dev, test, prod
   domain: "apps.silver.devops.gov.bc.ca" # it is required, apps.silver.devops.gov.bc.ca for silver cluster
-  appVersion: null
+  
 metabase:
   enabled: true
   replicaCount: 1
@@ -21,7 +21,7 @@ metabase:
     repository: ghcr.io/bcgov/nr-metabase/metabase
     pullPolicy: Always
     # this is for renovate give updated image alert.
-    tag: 0.48.0
+    tag: 0.48.4
   containerPort: 3000
   environment: production
   service:
