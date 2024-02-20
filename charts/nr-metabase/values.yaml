@@ -21,7 +21,7 @@ metabase:
     repository: ghcr.io/bcgov/nr-metabase/metabase
     pullPolicy: Always
     # this is for renovate give updated image alert.
-    tag: 0.48.4
+    tag: 0.48.5
   containerPort: 3000
   environment: production
   service:
