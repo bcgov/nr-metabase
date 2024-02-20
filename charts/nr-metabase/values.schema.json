@@ -54,7 +54,9 @@
     },
     "metabase": {
       "type": "object",
+      "additionalProperties": true,
       "properties": {
+        
         "enabled": {
           "type": "boolean",
           "default": true
@@ -64,6 +66,10 @@
           "minimum": 0,
           "default": 1
         },
+        "deploymentStrategy":{
+          "type": "string"
+        },
+
         "nameOverride": {
           "type": "string"
         },
@@ -172,8 +178,11 @@
         },
         "affinity": {
           "type": "object"
-        }
+        },
+        "additionalItems": true
+        
       }
+      
     },
     "database": {
       "type": "object",

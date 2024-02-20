@@ -17,11 +17,16 @@ metabase:
   replicaCount: 1
   nameOverride: ""
   fullnameOverride: ""
+  deploymentStrategy: Recreate
   image:
     repository: ghcr.io/bcgov/nr-metabase/metabase
     pullPolicy: Always
     # this is for renovate give updated image alert.
-    tag: 0.48.5
+    tag: 0.48.6
+  # the below is for renovate to keep pushing PRs, so that it keeps getting updated.
+  metabaseImage:
+    repository: metabase/metabase
+    tag: v0.48.6
   containerPort: 3000
   environment: production
   service:
@@ -49,6 +54,7 @@ database:
   replicaCount: 1
   nameOverride: ""
   fullnameOverride: ""
+  deploymentStrategy: Recreate
   image:
     repository: ghcr.io/bcgov/nr-containers/postgres
     pullPolicy: Always
