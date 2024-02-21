@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "database.labels" . | nindent 4 }}
 spec:
+  strategy:
+    type: {{ .Values.deploymentStrategy }}
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
