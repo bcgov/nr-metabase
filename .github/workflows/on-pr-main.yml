@@ -25,7 +25,7 @@ jobs:
         id: read_yaml
         shell: bash
         run: |
-          appVersion=$(yq '.appVersion' charts/nr-metabase/Chart.yaml)
+          appVersion=$(yq '.metabase.metabaseImage.tag' charts/nr-metabase/values.yaml)
           echo "app version is $appVersion"
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
           if [ "$appVersion" != '' ]; then
