@@ -24,7 +24,7 @@ metabase:
   # the below is for renovate to keep pushing PRs, so that it keeps getting updated.
   metabaseImage:
     repository: metabase/metabase
-    tag: v0.49.8
+    tag: v0.49.9
   containerPort: 3000
   environment: production
   service:
@@ -57,7 +57,7 @@ database:
     repository: ghcr.io/bcgov/nr-containers/postgres
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: '15.6'
+    tag: '15.7'
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
