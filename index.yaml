@@ -2,6 +2,36 @@ apiVersion: v1
 entries:
   nr-metabase:
   - apiVersion: v2
+    appVersion: v0.50.11
+    created: "2024-07-11T00:35:11.776414841Z"
+    dependencies:
+    - condition: database.enabled
+      name: database
+      repository: ""
+      version: 0.1.0
+    - condition: backup.enabled
+      name: backup
+      repository: ""
+      version: 0.1.0
+    description: A Helm chart for Deploying MetaBase on Openshift with Oracle DB support.
+    digest: 9b79b279176ad620cc2ef4032fc1dcc93afa4babbb4c2f1a04ad6467a5b0ed3f
+    keywords:
+    - nr
+    - metabase
+    - nrm
+    - nrm-metabase
+    - oracle
+    maintainers:
+    - email: omprakash.2.mishra@gov.bc.ca
+      name: Om Mishra
+    - email: derek.roberts@gov.bc.ca
+      name: Derek Roberts
+    name: nr-metabase
+    type: application
+    urls:
+    - https://github.com/bcgov/nr-metabase/releases/download/nr-metabase-0.50.11/nr-metabase-0.50.11.tgz
+    version: 0.50.11
+  - apiVersion: v2
     appVersion: v0.50.10
     created: "2024-07-05T16:42:58.713382431Z"
     dependencies:
@@ -1011,4 +1041,4 @@ entries:
     urls:
     - https://github.com/bcgov/nr-metabase/releases/download/nr-metabase-0.47.0/nr-metabase-0.47.0.tgz
     version: 0.47.0
-generated: "2024-07-05T16:42:58.713737398Z"
+generated: "2024-07-11T00:35:11.776653558Z"
