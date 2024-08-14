@@ -71,7 +71,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /api/health
               port: http
             initialDelaySeconds: 120
             periodSeconds: 5
@@ -79,7 +79,7 @@ spec:
             failureThreshold: 30
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/health
               port: http
             initialDelaySeconds: 10
             periodSeconds: 5
