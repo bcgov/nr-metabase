@@ -1,5 +1,5 @@
 #This Dockerfile mounts the certs
-FROM docker.io/openjdk:21-jdk-slim-bullseye
+FROM eclipse-temurin:21
 WORKDIR /app
 COPY ojdbc8-full /app/plugins/
 ARG METABASE_VERSION
