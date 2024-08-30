@@ -23,4 +23,4 @@ echo "Adding certs"
   done
 
 echo "Starting Metabase"
-java -jar metabase.jar
+java -Duser.name=metabase -Xms750m -Xmx750m -noverify -XX:TieredStopAtLevel=2 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=120m -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=4 -XX:CICompilerCount=2 -XX:+ExitOnOutOfMemoryError -jar metabase.jar
