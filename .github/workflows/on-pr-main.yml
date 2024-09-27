@@ -14,7 +14,7 @@ jobs:
   extract_version:
     name: Extract Version
     if: '!github.event.pull_request.head.repo.fork'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       app_version: ${{ steps.read_yaml.outputs.app_version }}
       available: ${{ steps.read_yaml.outputs.available }}
@@ -40,7 +40,7 @@ jobs:
     name: Builds
     needs: extract_version
     if: '!github.event.pull_request.head.repo.fork && ${{ needs.extract_version.outputs.available == true }}'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       packages: write
 
@@ -68,7 +68,7 @@ jobs:
     name: Deploys
     needs:
       - builds
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: redhat-actions/openshift-tools-installer@v1
