@@ -57,7 +57,7 @@ database:
     repository: ghcr.io/bcgov/nr-containers/postgres
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: '15.9'
+    tag: '15.10'
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
