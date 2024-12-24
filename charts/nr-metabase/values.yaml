@@ -32,9 +32,6 @@ metabase:
     port: 80
     targetPort: 3000
   resources:
-    limits:
-      cpu: 750m
-      memory: 1250Mi
     requests:
       cpu: 150m
       memory: 500Mi
@@ -72,9 +69,6 @@ database:
   tolerations: []
   affinity: {}
   resources:
-    limits:
-      cpu: 500m
-      memory: 1250Mi
     requests:
       cpu: 150m
       memory: 500Mi
@@ -109,9 +103,6 @@ backup:
   failedHistoryLimit: 2 # "The number of failed jobs that will be retained"
   backoffLimit: 0 # "The number of attempts to try for a successful job outcome"
   resources:
-    limits:
-      cpu: 150m
-      memory: 256Mi
     requests:
       cpu: 10m
       memory: 128Mi
