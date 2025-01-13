@@ -33,8 +33,8 @@ metabase:
     targetPort: 3000
   resources:
     requests:
-      cpu: 150m
-      memory: 500Mi
+      cpu: 250m
+      memory: 1200Mi
   autoscaling:
     enabled: false
   podAnnotations: {}
@@ -74,7 +74,7 @@ database:
       memory: 500Mi
   persistence:
     enabled: true
-    size: 512Mi
+    size: 740Mi
     accessMode: ReadWriteMany
     storageClass: netapp-file-standard
 backup:
