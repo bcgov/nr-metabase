@@ -25,15 +25,15 @@ echo "Adding certs"
     keytool -import -alias "orakey-${DB_HOST}-1" -keystore "${JAVA_HOME}"/lib/security/cacerts -storepass changeit -file "$cert_folder/${DB_HOST}.der" -noprompt || exit 1
   done
 
-echo "====================================="
-echo "  _   _ _____ _    _ __  __ ____   "
-echo " | \ | |  __ \ |  | |  \/  |  _ \  "
-echo " |  \| | |  | | |  | | \  / | |_) | "
-echo " | . \` | |  | | |  | | |\/| |  _ <  "
-echo " | |\  | |__| | |__| | |  | | |_) | "
-echo " |_| \_|_____/ \____/|_|  |_|____/  "
-echo "                                    "
-echo "====================================="
+echo -e "\033[1;33m=====================================\033[0m" # Bright Yellow
+echo -e "\033[0;36m  _   _ ____    __  __ ____  \033[0m" # Cyan
+echo -e "\033[0;36m | \ | |  _ \   |  \/  | __ ) \033[0m" # Cyan
+echo -e "\033[0;36m |  \| | |_) |  | |\/| |  _ \ \033[0m" # Cyan
+echo -e "\033[0;36m | |\  |  _ <   | |  | | |_) |\033[0m" # Cyan
+echo -e "\033[0;36m |_| \_|_| \_\  |_|  |_|____/ \033[0m" # Cyan
+echo -e "\033[0;36m                              \033[0m" # Cyan
+echo -e "\033[1;33m=====================================\033[0m" # Bright Yellow
+
 if [ -f /mnt/conf/log4j2.xml ]; then
   echo "/mnt/conf/log4j2.xml exists."
   java -Duser.name=metabase "-Xms${MIN_HEAP}" "-Xmx${MAX_HEAP}" -XX:TieredStopAtLevel=2 -XX:+UseZGC  -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=350m -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=4 -XX:CICompilerCount=2 -XX:+ExitOnOutOfMemoryError -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
