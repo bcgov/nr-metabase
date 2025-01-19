@@ -88,12 +88,18 @@ spec:
           resources:
             {{- toYaml .Values.metabase.resources | nindent 12 }}
           volumeMounts:
-            - name: mount
+            - name: log4j2
+              mountPath: /config
+            - name: startup
               mountPath: /mnt
       volumes:
-        - name: mount
+        - name: log4j2
           configMap:
-            name: {{ template "metabase.fullname" . }}
+            name: {{ template "metabase.fullname" . }}-log4j2
+            defaultMode: 0755 # Important: Sets execute permissions
+        - name: startup
+          configMap:
+            name: {{ template "metabase.fullname" . }}-startup
             defaultMode: 0755 # Important: Sets execute permissions
       {{- with .Values.metabase.nodeSelector }}
       nodeSelector:

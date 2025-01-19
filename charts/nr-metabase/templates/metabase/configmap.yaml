@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "metabase.fullname" . }}
+  name: {{ include "metabase.fullname" . }}-log4j2
   labels:
     {{- include "metabase.labels" . | nindent 4 }}
 data:
@@ -19,7 +19,7 @@ data:
         <Loggers>
             <Logger name="com.mchange" level="ERROR"/>
             <Logger name="liquibase" level="ERROR"/>
-            <Logger name="metabase" level="INFO"/>
+            <Logger name="metabase" level="DEBUG"/>
             <Logger name="metabase-enterprise" level="INFO"/>
             <Logger name="metabase.metabot" level="INFO"/>
             <Logger name="metabase.plugins" level="INFO"/>
@@ -34,6 +34,14 @@ data:
             </Root>
         </Loggers>
         </Configuration>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metabase.fullname" . }}-startup
+  labels:
+    {{- include "metabase.labels" . | nindent 4 }}
+data:
     run_app.sh: |-
         #!/bin/bash
         DB_HOST_PORT_ENV=${DB_HOST_PORT_ENV}
