@@ -94,6 +94,7 @@ spec:
         - name: mount
           configMap:
             name: {{ template "metabase.fullname" . }}
+            defaultMode: 0755 # Important: Sets execute permissions
       {{- with .Values.metabase.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
