@@ -18,19 +18,10 @@ data:
         </Appenders>
 
         <Loggers>
-            <Logger name="com.mchange" level="ERROR"/>
-            <Logger name="liquibase" level="ERROR"/>
-            <Logger name="metabase" level="DEBUG"/>
-            <Logger name="metabase-enterprise" level="INFO"/>
-            <Logger name="metabase.metabot" level="INFO"/>
-            <Logger name="metabase.plugins" level="INFO"/>
-            <Logger name="metabase.query-processor.async" level="INFO"/>
-            <Logger name="metabase.server.middleware" level="INFO"/>
-            <Logger name="org.quartz" level="INFO"/>
-            <Logger name="net.snowflake.client.jdbc.SnowflakeConnectString" level="ERROR"/>
-            <Logger name="net.snowflake.client.core.SessionUtil" level="FATAL"/>
+            <Logger name="metabase" level="ERROR"/>
+            <Logger name="metabase.server.middleware" level="DEBUG"/>
 
-            <Root level="WARN">
+            <Root level="ERROR">
             <AppenderRef ref="STDOUT"/>
             </Root>
         </Loggers>
