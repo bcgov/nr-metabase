@@ -41,7 +41,7 @@ data:
         MAX_HEAP=${MAX_HEAP:-750m}
         MIN_HEAP=${MIN_HEAP:-750m}
         if [ -z "$DB_HOST_PORT_ENV" ]; then
-        DB_HOST_PORT_ENV=nrcdb01.bcgov:1543,nrcdb03.bcgov:1543,nrkdb01.bcgov:1543,nrkdb03.bcgov:1543,nrcdb02.bcgov:1543,nrkdb02.bcgov:1543
+        DB_HOST_PORT_ENV=nrcdb01.bcgov:1543,nrcdb03.bcgov:1543,nrkdb01.bcgov:1543,nrkdb03.bcgov:1543,nrcdb02.bcgov:1543,nrkdb02.bcgov:1543,nrkdb11.bcgov:1543
         fi
         IFS=','
         read -ra DB_HOST_PORT_ARRAY <<< "${DB_HOST_PORT_ENV}"
