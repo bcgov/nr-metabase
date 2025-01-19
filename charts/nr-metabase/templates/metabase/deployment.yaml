@@ -15,10 +15,8 @@ spec:
       {{- include "metabase.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.metabase.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "metabase.selectorLabels" . | nindent 8 }}
     spec:
@@ -28,7 +26,7 @@ spec:
         - name: {{ include "metabase.fullname" . }}
           securityContext:
             {{- toYaml .Values.metabase.securityContext | nindent 12 }}
-          image: "image-registry.openshift-image-registry.svc:5000/{{.Release.Namespace}}/{{ include "metabase.fullname" . }}:{{ .Values.metabase.metabaseImage.tag }}"
+          image: "artifacts.developer.gov.bc.ca/github-docker-remote/bcgov/nr-metabase/metabase:{{ .Values.metabase.metabaseImage.tag }}"
           imagePullPolicy: {{ .Values.metabase.image.pullPolicy }}
           env:
             - name: MB_DB_DBNAME
@@ -65,6 +63,8 @@ spec:
               value: 0.0.0.0
             - name: MB_PASSWORD_COMPLEXITY
               value: strong
+            - name: NR_MB_VERSION
+              value: {{ .Values.metabase.metabaseImage.tag }}
           ports:
             - name: http
               containerPort: {{ .Values.metabase.service.targetPort }}

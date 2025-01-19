@@ -37,7 +37,6 @@ metabase:
       memory: 1200Mi
   autoscaling:
     enabled: false
-  podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
   imagePullSecrets: []
