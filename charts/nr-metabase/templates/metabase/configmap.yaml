@@ -69,7 +69,7 @@ data:
         JAVA_OPTS="-Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseZGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=350m -XX:+ExitOnOutOfMemoryError"
 
         if [ -f /config/log4j2.xml ]; then
-            java ${JAVA_OPTS} -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
+            java "${JAVA_OPTS}" -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
         else
-            java ${JAVA_OPTS} -jar metabase.jar
+            java "${JAVA_OPTS}" -jar metabase.jar
         fi
