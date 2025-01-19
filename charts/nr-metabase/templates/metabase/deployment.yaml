@@ -74,17 +74,17 @@ spec:
               path: /api/health
               port: http
             initialDelaySeconds: 120
-            periodSeconds: 5
+            periodSeconds: 30
             timeoutSeconds: 3
-            failureThreshold: 30
+            failureThreshold: 2
           readinessProbe:
             httpGet:
               path: /api/health
               port: http
-            initialDelaySeconds: 10
-            periodSeconds: 5
+            initialDelaySeconds: 30
+            periodSeconds: 10
             timeoutSeconds: 3
-            failureThreshold: 50
+            failureThreshold: 5
           resources:
             {{- toYaml .Values.metabase.resources | nindent 12 }}
           volumeMounts:
