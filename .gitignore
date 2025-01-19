@@ -25,3 +25,4 @@ replay_pid*
 !metabase/ojdbc8-full/**
 !metabase/InstallCert.class
 !Install
+.idea

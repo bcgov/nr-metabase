@@ -87,7 +87,13 @@ spec:
             failureThreshold: 50
           resources:
             {{- toYaml .Values.metabase.resources | nindent 12 }}
-
+          volumeMounts:
+            - name: log4j
+              mountPath: /mnt/conf
+      volumes:
+        - name: log4j
+            configMap:
+              name: {{ template "metabase.fullname" . }}
       {{- with .Values.metabase.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
