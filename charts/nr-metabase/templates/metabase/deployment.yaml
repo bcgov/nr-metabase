@@ -92,8 +92,8 @@ spec:
               mountPath: /mnt/conf
       volumes:
         - name: log4j
-            configMap:
-              name: {{ template "metabase.fullname" . }}
+          configMap:
+            name: {{ template "metabase.fullname" . }}
       {{- with .Values.metabase.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
