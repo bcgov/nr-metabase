@@ -88,14 +88,10 @@ spec:
           resources:
             {{- toYaml .Values.metabase.resources | nindent 12 }}
           volumeMounts:
-            - name: log4j
-              mountPath: /mnt/conf
-              subPath: log4j2.xml
-            - name: run-app
+            - name: mount
               mountPath: /mnt
-              subPath: run_app.sh
       volumes:
-        - name: log4j
+        - name: mount
           configMap:
             name: {{ template "metabase.fullname" . }}
       {{- with .Values.metabase.nodeSelector }}
