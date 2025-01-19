@@ -12,8 +12,10 @@ data:
             <Console name="STDOUT" target="SYSTEM_OUT" follow="true">
             <PatternLayout pattern="%style{%date}{white} | %highlight{%level}{ERROR=bright red, WARN=bright yellow, INFO=bright green, DEBUG=bright cyan} | %logger | %message%n%throwable">
                 <replace regex=":basic-auth \\[.*\\]" replacement=":basic-auth [redacted]"/>
-                <replace regex=".*\/api\/health.*" replacement=""/>
             </PatternLayout>
+            <Filters>
+                <RegexFilter regex=".*\/api\/health.*" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
             </Console>
         </Appenders>
 
