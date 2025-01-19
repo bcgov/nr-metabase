@@ -69,6 +69,14 @@ spec:
             - name: http
               containerPort: {{ .Values.metabase.service.targetPort }}
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 20
           livenessProbe:
             httpGet:
               path: /api/health
