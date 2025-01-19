@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metabase.fullname" . }}-log4j2
+  labels:
+    {{- include "metabase.labels" . | nindent 4 }}
+data:
+    log4j2.xml: |-
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Configuration>
+        <Appenders>
+            <Console name="STDOUT" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%style{%date}{white} | %highlight{%level}{ERROR=bright red, WARN=bright yellow, INFO=bright green, DEBUG=bright cyan} | %logger | %message%n%throwable">
+                <replace regex=":basic-auth \\[.*\\]" replacement=":basic-auth [redacted]"/>
+            </PatternLayout>
+            <Filters>
+                <RegexFilter regex=".*\/api\/health.*" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            </Console>
+        </Appenders>
+
+        <Loggers>
+            <Logger name="metabase" level="INFO"/>
+            <Logger name="metabase.server.middleware" level="DEBUG"/>
+
+            <Root level="ERROR">
+            <AppenderRef ref="STDOUT"/>
+            </Root>
+        </Loggers>
+        </Configuration>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metabase.fullname" . }}-startup
+  labels:
+    {{- include "metabase.labels" . | nindent 4 }}
+data:
+    run_app.sh: |-
+        #!/bin/bash
+        DB_HOST_PORT_ENV=${DB_HOST_PORT_ENV}
+        cert_folder="/opt"
+        MAX_HEAP=${MAX_HEAP:-500m}
+        MIN_HEAP=${MIN_HEAP:-500m}
+        if [ -z "$DB_HOST_PORT_ENV" ]; then
+        DB_HOST_PORT_ENV=nrcdb01.bcgov:1543,nrcdb03.bcgov:1543,nrkdb01.bcgov:1543,nrkdb03.bcgov:1543,nrcdb02.bcgov:1543,nrkdb02.bcgov:1543,nrkdb11.bcgov:1543
+        fi
+        IFS=','
+        read -ra DB_HOST_PORT_ARRAY <<< "${DB_HOST_PORT_ENV}"
+        for DB_HOST_PORT in "${DB_HOST_PORT_ARRAY[@]}"; do
+            IFS=':'
+            read -ra strarr <<<"${DB_HOST_PORT}"
+            DB_HOST="${strarr[0]}"
+            DB_PORT="${strarr[1]}"
+            openssl s_client -connect "${DB_HOST}:${DB_PORT}" -showcerts </dev/null 2>/dev/null | openssl x509 -outform pem >"$cert_folder/${DB_HOST}.pem" 2>/dev/null || exit 1
+            openssl x509 -outform der -in "$cert_folder/${DB_HOST}.pem" -out "$cert_folder/${DB_HOST}.der" 2>/dev/null || exit 1
+            keytool -import -alias "orakey-${DB_HOST}-1" -keystore "${JAVA_HOME}"/lib/security/cacerts -storepass changeit -file "$cert_folder/${DB_HOST}.der" -noprompt >/dev/null 2>&1 || exit 1
+        done
+
+        echo -e "\033[1;33m=====================================\033[0m"
+        echo -e "\033[0;36m  _   _ ____         __  __ ____  \033[0m"
+        echo -e "\033[0;36m | \ | |  _ \        |  \/  | __ ) \033[0m"
+        echo -e "\033[0;36m |  \| | |_) |       | |\/| |  _ \ \033[0m"
+        echo -e "\033[0;36m | |\  |  _ <        | |  | | |_) |\033[0m"
+        echo -e "\033[0;36m |_| \_|_| \_\       |_|  |_|____/ \033[0m"
+        echo -e "\033[0;36m                          ${NR_MB_VERSION} \033[0m"
+        echo -e "\033[1;33m=====================================\033[0m"
+
+
+        if [ -f /config/log4j2.xml ]; then
+            java -Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseZGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=350m -XX:+ExitOnOutOfMemoryError -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
+        else
+            java -Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseZGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=350m -XX:+ExitOnOutOfMemoryError -jar metabase.jar
+        fi

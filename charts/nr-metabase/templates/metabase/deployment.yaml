@@ -15,10 +15,8 @@ spec:
       {{- include "metabase.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.metabase.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "metabase.selectorLabels" . | nindent 8 }}
     spec:
@@ -28,7 +26,7 @@ spec:
         - name: {{ include "metabase.fullname" . }}
           securityContext:
             {{- toYaml .Values.metabase.securityContext | nindent 12 }}
-          image: "image-registry.openshift-image-registry.svc:5000/{{.Release.Namespace}}/{{ include "metabase.fullname" . }}:{{ .Values.metabase.metabaseImage.tag }}"
+          image: "artifacts.developer.gov.bc.ca/github-docker-remote/bcgov/nr-metabase/metabase:{{ .Values.metabase.metabaseImage.tag }}"
           imagePullPolicy: {{ .Values.metabase.image.pullPolicy }}
           env:
             - name: MB_DB_DBNAME
@@ -65,29 +63,52 @@ spec:
               value: 0.0.0.0
             - name: MB_PASSWORD_COMPLEXITY
               value: strong
+            - name: NR_MB_VERSION
+              value: {{ .Values.metabase.metabaseImage.tag }}
           ports:
             - name: http
               containerPort: {{ .Values.metabase.service.targetPort }}
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 20
           livenessProbe:
             httpGet:
               path: /api/health
               port: http
             initialDelaySeconds: 120
-            periodSeconds: 5
+            periodSeconds: 30
             timeoutSeconds: 3
-            failureThreshold: 30
+            failureThreshold: 2
           readinessProbe:
             httpGet:
               path: /api/health
               port: http
-            initialDelaySeconds: 10
-            periodSeconds: 5
+            initialDelaySeconds: 30
+            periodSeconds: 10
             timeoutSeconds: 3
-            failureThreshold: 50
+            failureThreshold: 5
           resources:
             {{- toYaml .Values.metabase.resources | nindent 12 }}
-
+          volumeMounts:
+            - name: log4j2
+              mountPath: /config
+            - name: startup
+              mountPath: /mnt
+      volumes:
+        - name: log4j2
+          configMap:
+            name: {{ template "metabase.fullname" . }}-log4j2
+            defaultMode: 0755 # Important: Sets execute permissions
+        - name: startup
+          configMap:
+            name: {{ template "metabase.fullname" . }}-startup
+            defaultMode: 0755 # Important: Sets execute permissions
       {{- with .Values.metabase.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
