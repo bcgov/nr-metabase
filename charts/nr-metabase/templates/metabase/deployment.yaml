@@ -93,7 +93,7 @@ spec:
               subPath: log4j2.xml
             - name: run-app
               mountPath: /mnt
-              subPath: run-app.sh
+              subPath: run_app.sh
       volumes:
         - name: log4j
           configMap:
