@@ -40,8 +40,8 @@ data:
         #!/bin/bash
         DB_HOST_PORT_ENV=${DB_HOST_PORT_ENV}
         cert_folder="/opt"
-        MAX_HEAP=${MAX_HEAP:-750m}
-        MIN_HEAP=${MIN_HEAP:-750m}
+        MAX_HEAP=${MAX_HEAP:-500m}
+        MIN_HEAP=${MIN_HEAP:-500m}
         if [ -z "$DB_HOST_PORT_ENV" ]; then
         DB_HOST_PORT_ENV=nrcdb01.bcgov:1543,nrcdb03.bcgov:1543,nrkdb01.bcgov:1543,nrkdb03.bcgov:1543,nrcdb02.bcgov:1543,nrkdb02.bcgov:1543,nrkdb11.bcgov:1543
         fi
@@ -66,8 +66,10 @@ data:
         echo -e "\033[0;36m                          ${NR_MB_VERSION} \033[0m"
         echo -e "\033[1;33m=====================================\033[0m"
 
+        JAVA_OPTS="-Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseZGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=350m -XX:+ExitOnOutOfMemoryError"
+
         if [ -f /config/log4j2.xml ]; then
-            java -Duser.name=metabase "-Xms${MIN_HEAP}" "-Xmx${MAX_HEAP}" -XX:TieredStopAtLevel=4 -XX:+UseZGC  -XX:+ExitOnOutOfMemoryError -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
+            java ${JAVA_OPTS} -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
         else
-            java -Duser.name=metabase "-Xms${MIN_HEAP}" "-Xmx${MAX_HEAP}" -XX:TieredStopAtLevel=4 -XX:+UseZGC  -XX:+ExitOnOutOfMemoryError -jar metabase.jar
+            java ${JAVA_OPTS} -jar metabase.jar
         fi
