@@ -21,6 +21,7 @@ data:
 
         <Loggers>
             <Logger name="metabase" level="INFO"/>
+            <Logger name="metabase.sync" level="ERROR"/>
             <Logger name="metabase.server.middleware" level="DEBUG"/>
 
             <Root level="ERROR">
