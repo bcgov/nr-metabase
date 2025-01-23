@@ -58,8 +58,8 @@ jobs:
           repository: ${{ github.repository }}/metabase
           target: ${{ github.sha }}
           tags: |
-            pr-${{ github.event.number }}
-            ${{ needs.extract_version.outputs.app_version }}
+            ${{ github.event.number }}
+            
 
 
 
