@@ -50,7 +50,7 @@ database:
   fullnameOverride: ""
   deploymentStrategy: Recreate
   image:
-    repository: ghcr.io/bcgov/nr-containers/postgres
+    repository: artifacts.developer.gov.bc.ca/github-docker-remote/bcgov/nr-containers/postgres
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: '15.10'
@@ -74,8 +74,8 @@ database:
   persistence:
     enabled: true
     size: 740Mi
-    accessMode: ReadWriteMany
-    storageClass: netapp-file-standard
+    accessMode: ReadWriteOnce
+    storageClass: netapp-block-standard
 backup:
   enabled: true
   nameOverride: ""
@@ -90,8 +90,8 @@ backup:
       - ReadWriteOnce
     mountPath: "/backups/"
     size: 256Mi #Volume space available for data, e.g. 512Mi, 2Gi.
-    storageClass: "netapp-block-standard"
-  schedule: "0 0 * * *" # cron job schedule
+    storageClass: "netapp-file-backup"
+  schedule: "0 0/4 * * *" # cron job schedule
   strategy: "rolling" # daily or rolling
   numBackups: 5 # The number of backup files to be retained.  Used for the `daily` backup strategy.  Ignored when using the `rolling` backup strategy.
   dailyBackups: 7 # The number of daily backup files to be retained.  Used for the `rolling` backup strategy.

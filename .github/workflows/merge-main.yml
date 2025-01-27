@@ -11,6 +11,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  vars:
+    name: Set Variables
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    steps:
+      # Get PR number for squash merges to main
+      - name: PR Number
+        id: pr
+        uses: bcgov/action-get-pr@v0.0.1
+      - name: Metabase Version
+        id: metabase_version
+        run: |
+          appVersion=$(yq '.metabase.metabaseImage.tag' charts/nr-metabase/values.yaml)
+          echo "app version is $appVersion"
+          echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
+      - uses: shrink/actions-docker-registry-tag@v4
+        with:
+          registry: ghcr.io
+          repository: ${{ github.repository }}/metabase
+          target: ${{ steps.pr.outputs.pr }}
+          tags: |
+            ${{ steps.metabase_version.outputs.app_version }}
   helm-release:
     runs-on: ubuntu-24.04
     steps:
