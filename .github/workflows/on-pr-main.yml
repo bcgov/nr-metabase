@@ -39,7 +39,7 @@ jobs:
   builds:
     name: Builds
     needs: extract_version
-    if: '!github.event.pull_request.head.repo.fork && ${{ needs.extract_version.outputs.available == true }}'
+    if: '!github.event.pull_request.head.repo.fork && needs.extract_version.outputs.available == true'
     runs-on: ubuntu-24.04
     permissions:
       packages: write
