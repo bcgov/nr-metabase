@@ -70,7 +70,7 @@ data:
 
 
         if [ -f /config/log4j2.xml ]; then
-            java -server -Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseZGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=350m -XX:+ExitOnOutOfMemoryError -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
+            java -server -Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=200m -XX:+ExitOnOutOfMemoryError -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
         else
-            java -server -Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseZGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=350m -XX:+ExitOnOutOfMemoryError -jar metabase.jar
+            java -server -Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=200m -XX:+ExitOnOutOfMemoryError -jar metabase.jar
         fi

@@ -13,7 +13,7 @@ concurrency:
 jobs:
   extract_version:
     name: Extract Version
-    if: '!github.event.pull_request.head.repo.fork'
+    if: (!github.event.pull_request.head.repo.fork)
     runs-on: ubuntu-24.04
     outputs:
       app_version: ${{ steps.read_yaml.outputs.app_version }}
@@ -28,10 +28,12 @@ jobs:
           appVersion=$(yq '.metabase.metabaseImage.tag' charts/nr-metabase/values.yaml)
           echo "app version is $appVersion"
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
-          if [ "$appVersion" != '' ]; then
-            echo "available=false" >> $GITHUB_OUTPUT;
+          if [ -z "$appVersion" ]; then
+            echo "Version is empty, marking as false"
+            echo "available=false" >> $GITHUB_OUTPUT
           else
-            echo "available=true" >> $GITHUB_OUTPUT;
+            echo "Version exists ($appVersion), marking as true"
+            echo "available=true" >> $GITHUB_OUTPUT
           fi
       - name: Get App Version
         run: echo "${{ steps.read_yaml.outputs.app_version }}"
@@ -39,7 +41,7 @@ jobs:
   builds:
     name: Builds
     needs: extract_version
-    if: '!github.event.pull_request.head.repo.fork && needs.extract_version.outputs.available == true'
+    if: (needs.extract_version.outputs.available == 'true')
     runs-on: ubuntu-24.04
     permissions:
       packages: write
