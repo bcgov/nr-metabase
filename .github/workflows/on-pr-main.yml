@@ -28,10 +28,12 @@ jobs:
           appVersion=$(yq '.metabase.metabaseImage.tag' charts/nr-metabase/values.yaml)
           echo "app version is $appVersion"
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
-          if [ "$appVersion" != '' ]; then
-            echo "available=false" >> $GITHUB_OUTPUT;
+          if [ -z "$appVersion" ]; then
+            echo "Version is empty, marking as false"
+            echo "available=false" >> $GITHUB_OUTPUT
           else
-            echo "available=true" >> $GITHUB_OUTPUT;
+            echo "Version exists ($appVersion), marking as true"
+            echo "available=true" >> $GITHUB_OUTPUT
           fi
       - name: Get App Version
         run: echo "${{ steps.read_yaml.outputs.app_version }}"
