@@ -4,5 +4,12 @@
   "extends": [
     "github>bcgov/renovate-config"
   ],
-  "pinDigests": false
+  "packageRules": [
+    {
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "pinDigests": false
+    }
+  ]
 }
