@@ -10,6 +10,8 @@ concurrency:
   group: pr-${{ github.workflow }}-${{ github.event.number }}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
   extract_version:
     name: Extract Version
@@ -35,6 +37,7 @@ jobs:
             echo "Version exists ($appVersion), marking as true"
             echo "available=true" >> $GITHUB_OUTPUT
           fi
+
       - name: Get App Version
         run: echo "${{ steps.read_yaml.outputs.app_version }}"
 
@@ -45,7 +48,6 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       packages: write
-
     steps:
       - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0
         with:
