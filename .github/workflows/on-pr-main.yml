@@ -10,8 +10,8 @@ concurrency:
   group: pr-${{ github.workflow }}-${{ github.event.number }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
+permissions: write-all
+  # contents: read
 
 jobs:
   extract_version:
