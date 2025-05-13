@@ -24,7 +24,7 @@ metabase:
   # the below is for renovate to keep pushing PRs, so that it keeps getting updated.
   metabaseImage:
     repository: metabase/metabase
-    tag: v0.54.4
+    tag: v0.54.4@sha256:136d8fd16812ccc64e0100387008c95f86ad56ec5c1464f2c9390225db892300
   containerPort: 3000
   environment: production
   service:
@@ -84,7 +84,7 @@ backup:
     repository: bcgovimages/backup-container
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: latest
+    tag: latest@sha256:d54eebb2623d5455994e55e79cb3e55b05352483eca0e69fe2a15701ee5a0291
   persistence:
     accessModes:
       - ReadWriteOnce
