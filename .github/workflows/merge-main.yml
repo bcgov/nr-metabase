@@ -19,14 +19,14 @@ jobs:
       # Get PR number for squash merges to main
       - name: PR Number
         id: pr
-        uses: bcgov/action-get-pr@v0.0.1
+        uses: bcgov/action-get-pr@21f9351425cd55a98e869ee28919a512aa30647d # v0.0.1
       - name: Metabase Version
         id: metabase_version
         run: |
           appVersion=$(yq '.metabase.metabaseImage.tag' charts/nr-metabase/values.yaml)
           echo "app version is $appVersion"
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
-      - uses: shrink/actions-docker-registry-tag@v4
+      - uses: shrink/actions-docker-registry-tag@f04afd0559f66b288586792eb150f45136a927fa # v4
         with:
           registry: ghcr.io
           repository: ${{ github.repository }}/metabase
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
       - name: Configure Git
@@ -52,7 +52,7 @@ jobs:
           VERSION=$(echo $APP_VERSION | sed 's/v//')
           helm package -u --destination=.cr-release-packages --app-version="$APP_VERSION" --version=$VERSION charts/${{ github.event.repository.name }}
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
+        uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
