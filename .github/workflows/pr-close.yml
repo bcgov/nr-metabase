@@ -20,7 +20,7 @@ jobs:
     name: Cleanup OpenShift
     runs-on: ubuntu-24.04
     steps:
-      - uses: redhat-actions/openshift-tools-installer@v1
+      - uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 # v1
         with:        
           oc: "4"
       - name: Remove OpenShift artifacts

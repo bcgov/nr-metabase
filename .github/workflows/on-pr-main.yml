@@ -20,7 +20,7 @@ jobs:
       available: ${{ steps.read_yaml.outputs.available }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Extract Version
         id: read_yaml
         shell: bash
@@ -47,14 +47,14 @@ jobs:
       packages: write
 
     steps:
-      - uses: bcgov/action-builder-ghcr@v2.3.0
+      - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0
         with:
           package: metabase
           tag: ${{ github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           build_args: |
             METABASE_VERSION=${{ needs.extract_version.outputs.app_version }}
-      - uses: shrink/actions-docker-registry-tag@v4
+      - uses: shrink/actions-docker-registry-tag@f04afd0559f66b288586792eb150f45136a927fa # v4
         with:
           registry: ghcr.io
           repository: ${{ github.repository }}/metabase
@@ -72,8 +72,8 @@ jobs:
       - builds
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: redhat-actions/openshift-tools-installer@v1
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 # v1
         with:        
           oc: "4"
       - name: Deploy to OpenShift
