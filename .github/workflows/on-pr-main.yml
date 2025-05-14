@@ -1,9 +1,8 @@
-name: Build and Deploy of Job on Pull Request to Main
+name: PR
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 concurrency:
   # PR open and close use the same group, allowing only one at a time
@@ -47,8 +46,8 @@ jobs:
     needs: extract_version
     if: (needs.extract_version.outputs.available == 'true')
     runs-on: ubuntu-24.04
-    permissions: write-all
-      # packages: write
+    permissions:
+      packages: write
     steps:
       - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0
         with:
@@ -68,6 +67,7 @@ jobs:
   deploys:
     name: Deploys
     needs: [builds]
+    permissions: write-all
     runs-on: ubuntu-24.04
     steps:
       - name: Deploy to OpenShift
