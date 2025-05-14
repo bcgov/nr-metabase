@@ -61,30 +61,18 @@ jobs:
           target: ${{ github.sha }}
           tags: |
             ${{ github.event.number }}
-            
-
-
-
 
   deploys:
     name: Deploys
-    needs:
-      - builds
+    needs: [builds]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 # v1
-        with:        
-          oc: "4"
       - name: Deploy to OpenShift
-        shell: bash
-        run: |
-          # Allow pipefail, since we could be catching oc create errors
-          set +o pipefail
-          
-          # Login to OpenShift (NOTE: project command is a safeguard)
-          oc login --token=${{ secrets.oc_token }} --server=${{ vars.oc_server }}
-          oc project ${{ vars.oc_namespace }}
-          
-          # Deploy Helm Chart
-          helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} --set-string global.secrets.databasePassword=${{ secrets.DB_PASSWORD}} --set-string global.zone="${{ github.event.number }}"   --set-string metabase.metabaseImage.tag=${{ github.sha }}  --set namespace=${{ vars.oc_namespace }}  --timeout 5m charts/nr-metabase --debug
+        uses: bcgov/action-oc-runner@v1.2.2
+        with:
+          oc_namespace: ${{ vars.OC_NAMESPACE }}
+          oc_token: ${{ secrets.OC_TOKEN }}
+          oc_server: ${{ vars.OC_SERVER }}
+          commands: |
+            # Deploy Helm Chart
+            helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} --set-string global.secrets.databasePassword=${{ secrets.DB_PASSWORD}} --set-string global.zone="${{ github.event.number }}"   --set-string metabase.metabaseImage.tag=${{ github.sha }}  --set namespace=${{ vars.oc_namespace }}  --timeout 5m charts/nr-metabase --debug
