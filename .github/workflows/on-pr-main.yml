@@ -1,14 +1,16 @@
-name: Build and Deploy of Job on Pull Request to Main
+name: PR
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 concurrency:
   # PR open and close use the same group, allowing only one at a time
   group: pr-${{ github.workflow }}-${{ github.event.number }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   extract_version:
@@ -18,6 +20,7 @@ jobs:
     outputs:
       app_version: ${{ steps.read_yaml.outputs.app_version }}
       available: ${{ steps.read_yaml.outputs.available }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -35,6 +38,7 @@ jobs:
             echo "Version exists ($appVersion), marking as true"
             echo "available=true" >> $GITHUB_OUTPUT
           fi
+
       - name: Get App Version
         run: echo "${{ steps.read_yaml.outputs.app_version }}"
 
@@ -45,7 +49,6 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       packages: write
-
     steps:
       - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0
         with:
