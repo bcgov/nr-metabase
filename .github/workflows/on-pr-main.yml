@@ -9,9 +9,6 @@ concurrency:
   group: pr-${{ github.workflow }}-${{ github.event.number }}
   cancel-in-progress: true
 
-permissions: write-all
-  # contents: read
-
 jobs:
   extract_version:
     name: Extract Version
@@ -20,6 +17,8 @@ jobs:
     outputs:
       app_version: ${{ steps.read_yaml.outputs.app_version }}
       available: ${{ steps.read_yaml.outputs.available }}
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -46,8 +45,9 @@ jobs:
     needs: extract_version
     if: (needs.extract_version.outputs.available == 'true')
     runs-on: ubuntu-24.04
-    # permissions:
-    #   packages: write
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0
         with:
@@ -67,7 +67,8 @@ jobs:
   deploys:
     name: Deploys
     needs: [builds]
-    # permissions: write-all
+    permissions: write-all
+      # packages: write
     runs-on: ubuntu-24.04
     steps:
       - name: Deploy to OpenShift
