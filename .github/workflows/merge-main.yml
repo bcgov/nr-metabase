@@ -40,6 +40,8 @@ jobs:
             ${{ steps.metabase_version.outputs.app_version }}
 
   helm-release:
+    permissions:
+      contents: write
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
