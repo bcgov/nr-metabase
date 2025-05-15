@@ -9,6 +9,8 @@ concurrency:
   group: pr-${{ github.workflow }}-${{ github.event.number }}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
   extract_version:
     name: Extract Version
