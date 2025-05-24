@@ -1,5 +1,5 @@
 #This Dockerfile mounts the certs
-FROM eclipse-temurin:23
+FROM eclipse-temurin:24
 WORKDIR /app
 COPY ojdbc8-full /app/plugins/
 ARG METABASE_VERSION
@@ -15,4 +15,5 @@ RUN wget -q https://downloads.metabase.com/${METABASE_VER}/metabase.jar \
 RUN chmod -R 777 /opt && chmod -R 777 /etc/ca-certificates && chmod -R 777 "${JAVA_HOME}"/lib/security
 EXPOSE 3000
 USER 185
+# the mount file is located in configmap , look into the charts section.
 ENTRYPOINT ["/mnt/run_app.sh"]
