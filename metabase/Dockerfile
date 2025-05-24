@@ -1,5 +1,5 @@
 #This Dockerfile mounts the certs
-FROM eclipse-temurin:23
+FROM eclipse-temurin:24
 WORKDIR /app
 COPY ojdbc8-full /app/plugins/
 ARG METABASE_VERSION
