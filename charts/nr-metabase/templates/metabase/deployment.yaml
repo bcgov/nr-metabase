@@ -107,10 +107,6 @@ spec:
           configMap:
             name: {{ template "metabase.fullname" . }}-log4j2
             defaultMode: 0755 # Important: Sets execute permissions
-        - name: startup
-          configMap:
-            name: {{ template "metabase.fullname" . }}-startup
-            defaultMode: 0755 # Important: Sets execute permissions
       {{- with .Values.metabase.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
