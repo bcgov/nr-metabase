@@ -5,8 +5,9 @@ MIN_HEAP=${MIN_HEAP:-750m}
 
 # Verify that the required environment variables are set
 if [ -z "$DB_HOST_PORT_ENV" ]; then
-  echo "DB_HOST_PORT_ENV is not set.  Exiting."
-  exit 1
+  echo -e "\n---"
+  echo -e "Warning: DB_HOST_PORT_ENV is not set. \n
+
 fi
 
 IFS=','
