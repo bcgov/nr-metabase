@@ -44,9 +44,13 @@ data:
         cert_folder="/opt"
         MAX_HEAP=${MAX_HEAP:-500m}
         MIN_HEAP=${MIN_HEAP:-500m}
+
+        # Verify that the required environment variables are set
         if [ -z "$DB_HOST_PORT_ENV" ]; then
-        DB_HOST_PORT_ENV=nrcdb01.bcgov:1543,nrcdb03.bcgov:1543,nrkdb01.bcgov:1543,nrkdb03.bcgov:1543,nrcdb02.bcgov:1543,nrkdb02.bcgov:1543,nrkdb11.bcgov:1543
+        echo "DB_HOST_PORT_ENV is not set.  Exiting."
+        exit 1
         fi
+
         IFS=','
         read -ra DB_HOST_PORT_ARRAY <<< "${DB_HOST_PORT_ENV}"
         for DB_HOST_PORT in "${DB_HOST_PORT_ARRAY[@]}"; do

@@ -78,4 +78,10 @@ jobs:
           oc_server: ${{ vars.OC_SERVER }}
           commands: |
             # Deploy Helm Chart
-            helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} --set-string global.secrets.databasePassword=${{ secrets.DB_PASSWORD}} --set-string global.zone="${{ github.event.number }}"   --set-string metabase.metabaseImage.tag=${{ github.sha }}  --set namespace=${{ vars.oc_namespace }}  --timeout 5m charts/nr-metabase --debug
+            helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} \
+              --set-string "metabase.dbHostPortEnv={${{ secrets.DB_HOST_PORT_ENV }}}" \
+              --set-string global.secrets.databasePassword=${{ secrets.DB_PASSWORD}} \
+              --set-string global.zone="${{ github.event.number }}" \
+              --set-string metabase.metabaseImage.tag=${{ github.sha }} \
+              --set-string namespace=${{ vars.oc_namespace }} \
+              --timeout 5m charts/nr-metabase --debug

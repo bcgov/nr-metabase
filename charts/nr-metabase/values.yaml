@@ -18,6 +18,7 @@ metabase:
   nameOverride: ""
   fullnameOverride: ""
   deploymentStrategy: Recreate
+  dbHostPortEnv: ~ # Environment variable for database host and port
   image:
     repository: ghcr.io/bcgov/nr-metabase/metabase
     pullPolicy: Always
