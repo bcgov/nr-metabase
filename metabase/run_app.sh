@@ -8,7 +8,6 @@ if [ -z "$DB_HOST_PORT_ENV" ]; then
   echo "DB_HOST_PORT_ENV is not set.  Exiting."
   exit 1
 fi
-echo "DB_HOST_PORT_ENV is $DB_HOST_PORT_ENV"
 
 IFS=','
 read -ra DB_HOST_PORT_ARRAY <<< "${DB_HOST_PORT_ENV}"
