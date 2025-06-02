@@ -100,8 +100,6 @@ spec:
           volumeMounts:
             - name: log4j2
               mountPath: /config
-            - name: startup
-              mountPath: /mnt
       volumes:
         - name: log4j2
           configMap:
