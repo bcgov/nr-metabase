@@ -23,12 +23,12 @@ for DB_HOST_PORT in "${DB_HOST_PORT_ARRAY[@]}"; do
 done
 
 echo -e "\033[1;33m=====================================\033[0m" # Bright Yellow
-echo -e "\033[0;36m  _   _ ____      __  __ ____  \033[0m" # Cyan
-echo -e "\033[0;36m | \ | |  _ \     |  \/  | __ ) \033[0m" # Cyan
-echo -e "\033[0;36m |  \| | |_) |    | |\/| |  _ \ \033[0m" # Cyan
-echo -e "\033[0;36m | |\  |  _ <     | |  | | |_) |\033[0m" # Cyan
-echo -e "\033[0;36m |_| \_|_| \_\    |_|  |_|____/ \033[0m" # Cyan
-echo -e "\033[0;36m                        ${NR_MB_VERSION} \033[0m" # Cyan
+echo -e "\033[0;36m  _   _ ____       __  __ ____   \033[0m" # Cyan
+echo -e "\033[0;36m \| \\ \| |  _ \\       \|  \/  \| __ ) \033[0m" # Cyan  <-- Corrected
+echo -e "\033[0;36m \|  \\\| | |_) \|       \| |\/\| |  _ \\ \033[0m" # Cyan  <-- Corrected
+echo -e "\033[0;36m \| |\\ \| |  _ <        \| |  \| | |_) \|\033[0m" # Cyan  <-- Corrected
+echo -e "\033[0;36m \|_|\ \\|_| \\_\\        \|_|  \\|_|____/ \033[0m" # Cyan  <-- Corrected
+echo -e "\033[0;36m                                  ${NR_MB_VERSION} \033[0m" # Cyan
 echo -e "\033[1;33m=====================================\033[0m" # Bright Yellow
 
 if [ -f /mnt/conf/log4j2.xml ]; then
