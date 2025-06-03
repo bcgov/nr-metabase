@@ -81,7 +81,7 @@ jobs:
           commands: |
             # Deploy Helm Chart
             helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} \
-              --set-string metabase.dbHostPortEnv="${DB_HOST_PORT}" \
+              --set-string "metabase.dbHostPortEnv=${DB_HOST_PORT}" \
               --set-string global.secrets.databasePassword="${{ secrets.DB_PASSWORD}}" \
               --set-string global.zone="${{ github.event.number }}" \
               --set-string metabase.metabaseImage.tag="${{ github.sha }}" \
