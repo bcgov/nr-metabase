@@ -65,8 +65,11 @@ spec:
               value: strong
             - name: NR_MB_VERSION
               value: {{ .Values.metabase.metabaseImage.tag }}
+            {{- if .Values.metabase.dbHostPortEnv }}
             - name: DB_HOST_PORT_ENV
               value: {{ .Values.metabase.dbHostPortEnv | quote }}
+            {{- end }}
+            
           ports:
             - name: http
               containerPort: {{ .Values.metabase.service.targetPort }}
