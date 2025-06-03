@@ -65,8 +65,11 @@ spec:
               value: strong
             - name: NR_MB_VERSION
               value: {{ .Values.metabase.metabaseImage.tag }}
+            {{- if .Values.metabase.dbHostPortEnv }}
             - name: DB_HOST_PORT_ENV
               value: {{ .Values.metabase.dbHostPortEnv | quote }}
+            {{- end }}
+            
           ports:
             - name: http
               containerPort: {{ .Values.metabase.service.targetPort }}
@@ -100,16 +103,10 @@ spec:
           volumeMounts:
             - name: log4j2
               mountPath: /config
-            - name: startup
-              mountPath: /mnt
       volumes:
         - name: log4j2
           configMap:
             name: {{ template "metabase.fullname" . }}-log4j2
-            defaultMode: 0755 # Important: Sets execute permissions
-        - name: startup
-          configMap:
-            name: {{ template "metabase.fullname" . }}-startup
             defaultMode: 0755 # Important: Sets execute permissions
       {{- with .Values.metabase.nodeSelector }}
       nodeSelector:
