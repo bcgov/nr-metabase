@@ -15,7 +15,6 @@ read -ra DB_HOST_PORT_ARRAY <<< "${DB_HOST_PORT_ENV}"
 for DB_HOST_PORT in "${DB_HOST_PORT_ARRAY[@]}"; do
   IFS=':'
   read -ra strarr <<<"${DB_HOST_PORT}"
-  echo "DB HOST PORT ${strarr}"
   DB_HOST="${strarr[0]}"
   DB_PORT="${strarr[1]}"
   openssl s_client -connect "${DB_HOST}:${DB_PORT}" -showcerts </dev/null | openssl x509 -outform pem >"$cert_folder/${DB_HOST}.pem" || exit 1
