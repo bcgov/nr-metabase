@@ -80,6 +80,8 @@ jobs:
           oc_server: ${{ vars.OC_SERVER }}
           commands: |
             set -x
+            echo "Value of DB_HOST_PORT shell variable after assignment (using printf %q):"
+            printf '%q\n' "${DB_HOST_PORT}"
             # Deploy Helm Chart
             helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} \
               --set-string "metabase.dbHostPortEnv={${DB_HOST_PORT}}" \
