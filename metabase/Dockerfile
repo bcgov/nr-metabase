@@ -17,4 +17,5 @@ RUN chmod -R 777 /opt && chmod -R 777 /etc/ca-certificates && chmod -R 777 "${JA
 
 EXPOSE 3000
 USER 185
+COPY run_app.sh /app/run_app.sh
 ENTRYPOINT ["/app/run_app.sh"]
