@@ -48,6 +48,8 @@ jobs:
     if: (needs.extract_version.outputs.available == 'true')
     runs-on: ubuntu-24.04
     permissions:
+      id-token: write
+      attestations: write
       packages: write
     steps:
       - uses: bcgov/action-builder-ghcr@fd17bc1cbb16a60514e0df3966d42dff9fc232bc # v4.0.0
