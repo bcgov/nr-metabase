@@ -10,6 +10,12 @@
         "dockerfile"
       ],
       "pinDigests": false
+    },
+    {
+      "matchPackageNames": ["metabase/metabase", "metabase"],
+      "matchDatasources": ["docker", "helm"],
+      "rangeStrategy": "minor",
+      "groupName": "metabase"
     }
   ]
 }
