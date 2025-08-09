@@ -19,7 +19,6 @@
         "docker"
       ],
       "matchUpdateTypes": [
-        "minor",
         "patch"
       ],
       "enabled": false
