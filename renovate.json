@@ -6,13 +6,10 @@
   ],
   "packageRules": [
     {
-      "matchFileNames": [
-        "charts/nr-metabase/values.yaml"
-      ],
-      "matchPackageNames": [
-        "metabase/metabase"
-      ],
       "matchManagers": [
+        "dockerfile",
+        "docker-compose",
+        "kubernetes",
         "helm-values"
       ],
       "matchDatasources": [
