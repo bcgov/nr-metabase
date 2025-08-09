@@ -6,16 +6,35 @@
   ],
   "packageRules": [
     {
-      "matchManagers": [
-        "dockerfile"
+      "matchPackageNames": [
+        "metabase/metabase",
+        "metabase"
       ],
-      "pinDigests": false
-    },
-    {
-      "matchPackageNames": ["metabase/metabase", "metabase"],
-      "matchDatasources": ["docker", "helm"],
+      "matchDatasources": [
+        "docker",
+        "helm"
+      ],
       "rangeStrategy": "minor",
       "groupName": "metabase"
+    },
+    {
+      "matchFileNames": [
+        "charts/nr-metabase/values.yaml"
+      ],
+      "matchPackageNames": [
+        "metabase/metabase"
+      ],
+      "matchManagers": [
+        "helm-values"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "enabled": false
     }
   ]
 }
