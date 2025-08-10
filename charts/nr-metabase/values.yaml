@@ -5,11 +5,11 @@ fullnameOverride: ""
 global:
   secrets:
     databasePassword: ~
-    databaseName: 'metabase'
-    databaseUser: 'metabase'
+    databaseName: "metabase"
+    databaseUser: "metabase"
     annotation:
       helm.sh/policy: "keep"
-  zone: 'prod' # it is required, could be pr-123, dev, test, prod
+  zone: "prod" # it is required, could be pr-123, dev, test, prod
   domain: "apps.silver.devops.gov.bc.ca" # it is required, apps.silver.devops.gov.bc.ca for silver cluster
 
 metabase:
@@ -25,7 +25,7 @@ metabase:
   # the below is for renovate to keep pushing PRs, so that it keeps getting updated.
   metabaseImage:
     repository: metabase/metabase
-    tag: v0.55.4
+    tag: v0.55.x
   containerPort: 3000
   environment: production
   service:
@@ -54,7 +54,7 @@ database:
     repository: artifacts.developer.gov.bc.ca/github-docker-remote/bcgov/nr-containers/postgres
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: '15.10'
+    tag: "15.10"
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}

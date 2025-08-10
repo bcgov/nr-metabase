@@ -7,15 +7,18 @@
   "packageRules": [
     {
       "matchManagers": [
-        "dockerfile"
+        "dockerfile",
+        "docker-compose",
+        "kubernetes",
+        "helm-values"
       ],
-      "pinDigests": false
-    },
-    {
-      "matchPackageNames": ["metabase/metabase", "metabase"],
-      "matchDatasources": ["docker", "helm"],
-      "rangeStrategy": "minor",
-      "groupName": "metabase"
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "enabled": false
     }
   ]
 }
