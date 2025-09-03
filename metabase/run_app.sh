@@ -25,7 +25,7 @@ done
 echo "NR Metabase started at: $(date +'%Y-%m-%d %H:%M:%S') with version: ${NR_MB_VERSION}"
 
 if [ -f /config/log4j2.xml ]; then
-    java -server -Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=400m -XX:+ExitOnOutOfMemoryError -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
+    java -server -Duser.name=metabase "-Xms${MIN_HEAP}" "-Xmx${MAX_HEAP}" -XX:TieredStopAtLevel=4 -XX:CICompilerCount=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=4 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=400m -XX:+ExitOnOutOfMemoryError -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
 else
-    java -server -Duser.name=metabase -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -XX:TieredStopAtLevel=4 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=400m -XX:+ExitOnOutOfMemoryError -jar metabase.jar
+    java -server -Duser.name=metabase "-Xms${MIN_HEAP}" "-Xmx${MAX_HEAP}" -XX:TieredStopAtLevel=4 -XX:CICompilerCount=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=4 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=400m -XX:+ExitOnOutOfMemoryError -jar metabase.jar
 fi
