@@ -17,9 +17,36 @@ for DB_HOST_PORT in "${DB_HOST_PORT_ARRAY[@]}"; do
   read -ra strarr <<<"${DB_HOST_PORT}"
   DB_HOST="${strarr[0]}"
   DB_PORT="${strarr[1]}"
-  openssl s_client -connect "${DB_HOST}:${DB_PORT}" -showcerts </dev/null | openssl x509 -outform pem >"$cert_folder/${DB_HOST}.pem" || exit 1
-  openssl x509 -outform der -in "$cert_folder/${DB_HOST}.pem" -out "$cert_folder/${DB_HOST}.der" || exit 1
-  keytool -import -alias "orakey-${DB_HOST}-1" -keystore "${JAVA_HOME}"/lib/security/cacerts -storepass changeit -file "$cert_folder/${DB_HOST}.der" -noprompt || exit 1
+  
+  if [[ -z "$DB_HOST" || -z "$DB_PORT" ]]; then
+    printf 'WARN: Skipping invalid entry "%s"\n' "$DB_HOST_PORT" >&2
+    continue
+  fi
+  
+  pem="$cert_folder/${DB_HOST}.pem"
+  der="$cert_folder/${DB_HOST}.der"
+  
+  # Handshake and extract leaf cert to PEM
+  if ! openssl s_client -servername "$DB_HOST" -connect "${DB_HOST}:${DB_PORT}" -showcerts </dev/null 2>/dev/null \
+      | openssl x509 -outform pem >"$pem"; then
+    printf 'WARN: TLS handshake or cert extraction failed for %s:%s\n' "$DB_HOST" "$DB_PORT" >&2
+    continue
+  fi
+
+  # Convert PEM -> DER
+  if ! openssl x509 -outform der -in "$pem" -out "$der"; then
+    printf 'WARN: PEM->DER conversion failed for %s\n' "$DB_HOST" >&2
+    continue
+  fi
+
+  # Import into Java cacerts
+  if ! keytool -import -alias "orakey-${DB_HOST}-1" -keystore "${JAVA_HOME}/lib/security/cacerts" \
+      -storepass changeit -file "$der" -noprompt; then
+    printf 'WARN: keytool import failed for %s\n' "$DB_HOST" >&2
+    continue
+  fi
+
+  printf 'INFO: Imported cert for %s:%s\n' "$DB_HOST" "$DB_PORT"
 done
 
 echo "NR Metabase started at: $(date +'%Y-%m-%d %H:%M:%S') with version: ${NR_MB_VERSION}"
