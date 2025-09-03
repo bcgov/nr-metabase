@@ -25,7 +25,7 @@ metabase:
   # the below is for renovate to keep pushing PRs, so that it keeps getting updated.
   metabaseImage:
     repository: metabase/metabase
-    tag: v0.55.x
+    tag: v0.55.15
   containerPort: 3000
   environment: production
   service:
