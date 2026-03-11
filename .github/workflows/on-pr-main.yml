@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Deploy to OpenShift
-        uses: bcgov/action-oc-runner@57a28c38359c93e43edf609d35b9a3f50a070131 # v1.4.0
+        uses: bcgov/action-oc-runner@d2fc921aaa9d70684c186dbb7754e6985d44d86f # v1.4.1
         env:
           DB_HOST_PORT: ${{ secrets.DB_HOST_PORT_ENV }}
         with:
