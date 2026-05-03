@@ -6,6 +6,7 @@
   ],
   "packageRules": [
     {
+      "description": "Disable all Docker image patch updates",
       "matchManagers": [
         "dockerfile",
         "docker-compose",
@@ -19,6 +20,20 @@
         "patch"
       ],
       "enabled": false
+    },
+    {
+      "description": "Disable all Renovate updates for Eclipse Temurin base image, no auto-merge",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "eclipse-temurin"
+      ],
+      "enabled": false,
+      "automerge": false
     }
   ]
 }
