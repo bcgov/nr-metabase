@@ -26,3 +26,5 @@ replay_pid*
 !metabase/InstallCert.class
 !Install
 .idea
+**/.copilot-memory
+**/.copilot-memory/**

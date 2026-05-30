@@ -22,7 +22,7 @@ metabase:
   image:
     repository: ghcr.io/bcgov/nr-metabase/metabase
     pullPolicy: Always
-  # the below is for renovate to keep pushing PRs, so that it keeps getting updated.
+  # Track the upstream Metabase image tag used by the deployment template.
   metabaseImage:
     repository: metabase/metabase
     tag: v0.61.1
