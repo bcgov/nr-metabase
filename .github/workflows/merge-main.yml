@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - '*.md'
+      - "*.md"
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}
@@ -28,7 +28,7 @@ jobs:
       - name: Metabase Version
         id: metabase_version
         run: |
-          appVersion=$(yq '.metabase.metabaseImage.tag' charts/nr-metabase/values.yaml)
+          appVersion="$(bash .github/scripts/get-metabase-version.sh)"
           echo "app version is $appVersion"
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
       - uses: shrink/actions-docker-registry-tag@e6aaef25c595b6e0edd18bf4c7dbfea3abd43299 # v5
@@ -57,9 +57,8 @@ jobs:
       - name: package helm chart
         shell: bash
         run: |
-          APP_VERSION=$(yq '.metabase.metabaseImage.tag' charts/nr-metabase/values.yaml)
-          # remove v from version as it only needs the numbers without v
-          VERSION=$(echo $APP_VERSION | sed 's/v//')
+          APP_VERSION="$(bash .github/scripts/get-metabase-version.sh)"
+          VERSION="${APP_VERSION#v}"
           helm package -u --destination=.cr-release-packages --app-version="$APP_VERSION" --version=$VERSION charts/${{ github.event.repository.name }}
 
       - name: Run chart-releaser
@@ -67,6 +66,5 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
-          skip_packaging: 'true'
-
-
+          skip_packaging: "true"
+          skip_existing: "true"

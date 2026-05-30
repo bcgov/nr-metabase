@@ -1,0 +1,40 @@
+version: 2
+
+updates:
+  - package-ecosystem: "docker"
+    directories:
+      - "/"
+      - "/charts/nr-metabase"
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "America/Vancouver"
+    open-pull-requests-limit: 2
+    cooldown:
+      default-days: 7
+    groups:
+      infrastructure:
+        group-by: dependency-name
+        patterns:
+          - "*"
+    ignore:
+      # Keep the pinned JDK base image stable while still updating other images.
+      - dependency-name: "eclipse-temurin"
+      # Suppress Docker patch bumps for container images.
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "America/Vancouver"
+    open-pull-requests-limit: 2
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"
