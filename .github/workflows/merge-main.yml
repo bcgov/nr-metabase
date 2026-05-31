@@ -15,7 +15,10 @@ permissions: {}
 jobs:
   vars:
     name: Set Variables
+    outputs:
+      release_exists: ${{ steps.release_check.outputs.release_exists }}
     permissions:
+      contents: read
       packages: write
     runs-on: ubuntu-24.04
     timeout-minutes: 1
@@ -31,6 +34,18 @@ jobs:
           appVersion="$(bash .github/scripts/get-metabase-version.sh)"
           echo "app version is $appVersion"
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
+
+      - name: Check existing GitHub release
+        id: release_check
+        shell: bash
+        run: |
+          releaseTag="${{ github.event.repository.name }}-${APP_VERSION#v}"
+          echo "release_tag=$releaseTag" >> "$GITHUB_OUTPUT"
+          gh release view "$releaseTag" >/dev/null 2>&1 && echo "release_exists=true" >> "$GITHUB_OUTPUT" || echo "release_exists=false" >> "$GITHUB_OUTPUT"
+        env:
+          APP_VERSION: ${{ steps.metabase_version.outputs.app_version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: shrink/actions-docker-registry-tag@e6aaef25c595b6e0edd18bf4c7dbfea3abd43299 # v5
         with:
           registry: ghcr.io
@@ -40,6 +55,8 @@ jobs:
             ${{ steps.metabase_version.outputs.app_version }}
 
   helm-release:
+    needs: vars
+    if: needs.vars.outputs.release_exists != 'true'
     permissions:
       contents: write
     runs-on: ubuntu-24.04
