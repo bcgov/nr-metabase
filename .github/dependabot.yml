@@ -13,15 +13,24 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      metabase:
+        group-by: dependency-name
+        patterns:
+          - "metabase/metabase"
       infrastructure:
         group-by: dependency-name
         patterns:
           - "*"
+        exclude-patterns:
+          - "metabase/metabase"
     ignore:
       # Keep the pinned JDK base image stable while still updating other images.
       - dependency-name: "eclipse-temurin"
-      # Suppress Docker patch bumps for container images.
-      - dependency-name: "*"
+      # Suppress Docker patch bumps for non-Metabase container images.
+      - dependency-name: "artifacts.developer.gov.bc.ca/github-docker-remote/bcgov/nr-containers/postgres"
+        update-types:
+          - "version-update:semver-patch"
+      - dependency-name: "bcgovimages/backup-container"
         update-types:
           - "version-update:semver-patch"
 
