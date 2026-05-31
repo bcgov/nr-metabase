@@ -1,45 +1,51 @@
 name: Dependabot auto-merge
 
 on:
-    pull_request_target:
-        types: [opened, reopened, synchronize, ready_for_review]
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
 
 concurrency:
-    group: dependabot-auto-merge-${{ github.event.pull_request.number }}
-    cancel-in-progress: true
+  group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 permissions:
-    contents: write
-    pull-requests: write
+  contents: write
+  pull-requests: write
 
 jobs:
-    auto-merge:
-        name: Auto-merge safe Dependabot updates
-        if: github.event.pull_request.user.login == 'dependabot[bot]' && !github.event.pull_request.draft
-        runs-on: ubuntu-24.04
-        steps:
-            - name: Fetch Dependabot metadata
-              id: metadata
-              uses: dependabot/fetch-metadata@v3
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
+  auto-merge:
+    name: Auto-merge safe Dependabot updates
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && !github.event.pull_request.draft
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v6
+      - name: Approve eligible Dependabot updates
+        if: >
+          (steps.metadata.outputs.package-ecosystem == 'github_actions' ||
+          steps.metadata.outputs.package-ecosystem == 'github-actions') ||
+          (steps.metadata.outputs.package-ecosystem == 'docker' &&
+          steps.metadata.outputs.dependency-group == 'metabase' &&
+          (steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'))
+        run: bash .github/scripts/approve-dependabot-pr.sh "$PR_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
 
-            - name: Approve safe GitHub Actions updates
-              if: >
-                  steps.metadata.outputs.package-ecosystem == 'github-actions' &&
-                  (steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-                  steps.metadata.outputs.update-type == 'version-update:semver-minor')
-              run: bash .github/scripts/approve-dependabot-pr.sh "$PR_URL"
-              env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  PR_URL: ${{ github.event.pull_request.html_url }}
-
-            - name: Enable auto-merge for safe GitHub Actions updates
-              if: >
-                  steps.metadata.outputs.package-ecosystem == 'github-actions' &&
-                  (steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-                  steps.metadata.outputs.update-type == 'version-update:semver-minor')
-              run: gh pr merge --auto --squash "$PR_URL"
-              env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  PR_URL: ${{ github.event.pull_request.html_url }}
+      - name: Enable auto-merge for eligible Dependabot updates
+        if: >
+          (steps.metadata.outputs.package-ecosystem == 'github_actions' ||
+          steps.metadata.outputs.package-ecosystem == 'github-actions') ||
+          (steps.metadata.outputs.package-ecosystem == 'docker' &&
+          steps.metadata.outputs.dependency-group == 'metabase' &&
+          (steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'))
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
