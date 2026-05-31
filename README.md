@@ -19,8 +19,6 @@ The chart ships a custom Metabase image bundling the Oracle JDBC driver, auto-pr
 - [Operations](#operations) — backups, secrets, health, logging
 - [CI/CD & releases](#cicd--releases)
 - [Repository layout](#repository-layout)
-- [Compliance](#compliance)
-- [Maintainers](#maintainers)
 
 ---
 
