@@ -23,7 +23,7 @@ jobs:
         uses: dependabot/fetch-metadata@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - name: Approve eligible Dependabot updates
         if: >
           (steps.metadata.outputs.package-ecosystem == 'github_actions' ||
