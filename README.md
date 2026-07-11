@@ -50,7 +50,7 @@ The stock Metabase image cannot talk to Oracle, and it certainly cannot talk to 
                                                  │
                  ┌───────────────────────────────▼────────────────────────────────┐
                  │  Metabase Pod (custom image)                                    │
-                 │   • metabase.jar on Temurin 21                                  │
+                 │   • metabase.jar on Temurin 25                                  │
                  │   • ojdbc8-full Oracle driver in /plugins                       │
                  │   • run_app.sh imports Oracle TLS certs → JVM cacerts at start  │
                  │   • log4j2 config mounted from ConfigMap                        │
@@ -244,7 +244,7 @@ nr-metabase/
 │       ├── knp.yaml             # Network policies
 │       └── metabase/            # Deployment, Service, Route, log4j2 ConfigMap
 ├── metabase/                    # Custom image build context
-│   ├── Dockerfile               # Temurin 21 + Oracle driver + metabase.jar
+│   ├── Dockerfile               # Temurin 25 + Oracle driver + metabase.jar
 │   ├── run_app.sh               # TLS cert import + tuned JVM launch
 │   └── ojdbc8-full/             # Bundled Oracle JDBC driver
 ├── .github/workflows/           # CI/CD pipelines
@@ -253,7 +253,7 @@ nr-metabase/
 ```
 
 ### How the image is built
-The `metabase/Dockerfile` starts from `eclipse-temurin:21-jammy`, copies the Oracle driver into `/plugins`, downloads the pinned `metabase.jar` at build time (version passed via the `METABASE_VERSION` build arg), and sets `run_app.sh` as the entrypoint. The container runs as non-root (UID 185). `run_app.sh` imports any configured Oracle TLS certificates, then launches the JVM with GC and heap flags tuned for a memory-constrained pod.
+The `metabase/Dockerfile` starts from `eclipse-temurin:25-jammy`, relaxes `jdk.tls.disabledAlgorithms` so the JVM can complete a TLS handshake with the Oracle DB's legacy cert, copies the Oracle driver into `/plugins`, downloads the pinned `metabase.jar` at build time (version passed via the `METABASE_VERSION` build arg), and sets `run_app.sh` as the entrypoint. The container runs as non-root (UID 185). `run_app.sh` imports any configured Oracle TLS certificates, then launches the JVM with GC and heap flags tuned for a memory-constrained pod.
 
 
 Licensed under the terms in [`LICENSE`](./LICENSE).
