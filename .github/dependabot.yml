@@ -24,8 +24,6 @@ updates:
         exclude-patterns:
           - "metabase/metabase"
     ignore:
-      # Keep the pinned JDK base image stable while still updating other images.
-      - dependency-name: "eclipse-temurin"
       # Suppress Docker patch bumps for non-Metabase container images.
       - dependency-name: "artifacts.developer.gov.bc.ca/github-docker-remote/bcgov/nr-containers/postgres"
         update-types:

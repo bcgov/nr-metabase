@@ -1,0 +1,6 @@
+# Force LF line endings for shell scripts regardless of local core.autocrlf,
+# so Windows checkouts don't break Linux container builds (shebang lines fail
+# on CRLF, e.g. "/bin/sh^M: bad interpreter").
+* text=auto
+*.sh text eol=lf
+mvnw text eol=lf
