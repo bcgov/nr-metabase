@@ -44,7 +44,7 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: bcgov/action-builder-ghcr@cb2629351c87dd1c2130073e4ebb7233a9653a63 # v4.4.1
+      - uses: bcgov/actions/builder-ghcr@0992e41cd11c5370b77f9e6066effe63efe9f8c9 # v0.4.0
         with:
           package: metabase
           tags: ${{ github.sha }}
