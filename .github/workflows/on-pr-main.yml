@@ -62,6 +62,7 @@ jobs:
     name: Deploys
     needs: [builds]
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
     steps:
       - name: Deploy to OpenShift
         uses: bcgov/action-oc-runner@111868d1fc50db0a40417ba321d865ef5c931bbd # v1.7.0
@@ -72,11 +73,47 @@ jobs:
           oc_token: ${{ secrets.OC_TOKEN }}
           oc_server: ${{ vars.OC_SERVER }}
           commands: |
-            # Deploy Helm Chart
-            helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} \
-              --set-literal metabase.dbHostPortEnv="${DB_HOST_PORT}" \
-              --set-string global.secrets.databasePassword="${{ secrets.DB_PASSWORD}}" \
-              --set-string global.zone="${{ github.event.number }}" \
-              --set-string metabase.metabaseImage.tag="${{ github.sha }}" \
-              --set-string namespace="${{ vars.oc_namespace }}" \
-              --timeout 5m charts/nr-metabase --debug
+            # Retry function with exponential backoff (up to 10 attempts)
+            retry_with_backoff() {
+              local max_attempts=10
+              local timeout=300  # 5 minutes per attempt
+              local attempt=1
+              local exit_code=0
+
+              while [ $attempt -le $max_attempts ]; do
+                echo "Deployment attempt $attempt/$max_attempts"
+
+                # Deploy Helm Chart
+                timeout $timeout helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} \
+                  --set-literal metabase.dbHostPortEnv="${DB_HOST_PORT}" \
+                  --set-string global.secrets.databasePassword="${{ secrets.DB_PASSWORD}}" \
+                  --set-string global.zone="${{ github.event.number }}" \
+                  --set-string metabase.metabaseImage.tag="${{ github.sha }}" \
+                  --set-string namespace="${{ vars.oc_namespace }}" \
+                  --timeout 5m charts/nr-metabase --debug
+
+                exit_code=$?
+
+                if [ $exit_code -eq 0 ]; then
+                  echo "Deployment succeeded on attempt $attempt"
+                  return 0
+                fi
+
+                if [ $attempt -lt $max_attempts ]; then
+                  # Exponential backoff: 2^(attempt-1) seconds, max 60 seconds
+                  local backoff=$((2 ** (attempt - 1)))
+                  if [ $backoff -gt 60 ]; then
+                    backoff=60
+                  fi
+                  echo "Deployment failed (exit code: $exit_code). Retrying in ${backoff}s..."
+                  sleep $backoff
+                else
+                  echo "Deployment failed after $max_attempts attempts"
+                  return $exit_code
+                fi
+
+                ((attempt++))
+              done
+            }
+
+            retry_with_backoff
