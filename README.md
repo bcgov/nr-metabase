@@ -50,7 +50,7 @@ The stock Metabase image cannot talk to Oracle, and it certainly cannot talk to 
                                                  │
                  ┌─────────────────────────────────────────────────────────┐
                  │  Metabase Pod (custom image)                            │
-                 │   • metabase.jar (v0.61.1) on Temurin 25                │
+                 │   • metabase.jar (vx.x.x) on Temurin 25                │
                  │   • ojdbc8-full Oracle driver in /plugins               │
                  │   • run_app.sh imports Oracle TLS certs → JVM cacerts   │
                  │   • log4j2 config mounted from ConfigMap                │
@@ -133,7 +133,7 @@ All values live in `charts/nr-metabase/values.yaml` and are validated against `v
 |---|---|---|
 | `metabase.enabled` | `true` | Toggle the Metabase component. |
 | `metabase.replicaCount` | `1` | Pod replicas (Metabase is not horizontally scalable by default). |
-| `metabase.metabaseImage.tag` | `v0.61.1` | Metabase version deployed by the pod. |
+| `metabase.metabaseImage.tag` | `vx.x.x` | Metabase version deployed by the pod. |
 | `metabase.dbHostPortEnv` | `~` | Comma-separated `host:port` list of Oracle endpoints whose TLS certs are imported at startup. |
 | `metabase.service.port` / `targetPort` | `80` / `3000` | Service port mapping. |
 | `metabase.resources.requests` | `250m` CPU / `1200Mi` | Resource requests. |

@@ -77,6 +77,8 @@ jobs:
         run: |
           APP_VERSION="$(bash .github/scripts/get-metabase-version.sh)"
           VERSION="${APP_VERSION#v}"
+          echo "APP_VERSION=$APP_VERSION"
+          echo "VERSION=$VERSION"
           helm package -u --destination=.cr-release-packages --app-version="$APP_VERSION" --version=$VERSION charts/${{ github.event.repository.name }}
 
       - name: Run chart-releaser
