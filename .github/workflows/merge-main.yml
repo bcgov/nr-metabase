@@ -27,7 +27,8 @@ jobs:
       - name: PR Number
         id: pr
         uses: bcgov/action-get-pr@28b0adf8e4d40720d41f9c87356ce24b0a4bd6af # v0.3.1
-
+      - name: Checkout
+        uses: actions/checkout@v7.0.0
       - name: Metabase Version
         id: metabase_version
         run: |
