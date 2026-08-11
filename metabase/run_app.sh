@@ -1,7 +1,10 @@
 #!/bin/bash
 cert_folder="/opt"
-MAX_HEAP=${MAX_HEAP:-750m}
-MIN_HEAP=${MIN_HEAP:-750m}
+# Percentage of the container's memory *limit* (charts/nr-metabase
+# values.yaml: metabase.resources.limits.memory), not a fixed size, so the
+# heap scales automatically if that limit ever changes. 60% of the chart's limit
+MIN_HEAP_PERCENT=${MIN_HEAP_PERCENT:-60}
+MAX_HEAP_PERCENT=${MAX_HEAP_PERCENT:-60}
 
 # Verify that the required environment variables are set
 if [ -z "$DB_HOST_PORT_ENV" ]; then
@@ -51,8 +54,20 @@ done
 
 echo "NR Metabase started at: $(date +'%Y-%m-%d %H:%M:%S') with version: ${NR_MB_VERSION}"
 
+# JDK 25 based tuning
+JAVA_OPTS=(
+  -Duser.name=metabase
+  -XX:InitialRAMPercentage=${MIN_HEAP_PERCENT}
+  -XX:MaxRAMPercentage=${MAX_HEAP_PERCENT}
+  -XX:+UseG1GC
+  -XX:MaxGCPauseMillis=200
+  -XX:+UseCompactObjectHeaders
+  -XX:MaxMetaspaceSize=400m
+  -XX:+ExitOnOutOfMemoryError
+)
+
 if [ -f /config/log4j2.xml ]; then
-    java -server -Duser.name=metabase "-Xms${MIN_HEAP}" "-Xmx${MAX_HEAP}" -XX:TieredStopAtLevel=4 -XX:CICompilerCount=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=4 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=400m -XX:+ExitOnOutOfMemoryError -Dlog4j.configurationFile=file:/config/log4j2.xml -jar metabase.jar
-else
-    java -server -Duser.name=metabase "-Xms${MIN_HEAP}" "-Xmx${MAX_HEAP}" -XX:TieredStopAtLevel=4 -XX:CICompilerCount=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=4 -XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=400m -XX:+ExitOnOutOfMemoryError -jar metabase.jar
+  JAVA_OPTS+=(-Dlog4j.configurationFile=file:/config/log4j2.xml)
 fi
+
+java "${JAVA_OPTS[@]}" -jar metabase.jar
