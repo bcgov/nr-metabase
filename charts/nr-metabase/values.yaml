@@ -7,6 +7,11 @@ global:
     databasePassword: ~
     databaseName: "metabase"
     databaseUser: "metabase"
+    # An upgrade normally fails outright when the credentials Secret is missing,
+    # rather than silently issuing new ones. Set to true only to bootstrap a
+    # release whose Secret is genuinely absent, or for client-side --dry-run,
+    # where `lookup` cannot see the cluster and always reports it missing.
+    allowMissingOnUpgrade: false
     annotation:
       helm.sh/policy: "keep"
   zone: "prod" # it is required, could be pr-123, dev, test, prod
