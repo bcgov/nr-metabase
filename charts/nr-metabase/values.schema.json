@@ -26,6 +26,11 @@
               "type": "string",
               "default": "metabase"
             },
+            "allowMissingOnUpgrade": {
+              "type": "boolean",
+              "default": false,
+              "description": "Allow an upgrade to proceed when the credentials Secret is absent, issuing new credentials instead of failing. Intended for client-side --dry-run and for adopting a release whose Secret is genuinely missing."
+            },
             "annotation": {
               "type": "object",
               "properties": {
