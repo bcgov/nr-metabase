@@ -3,7 +3,7 @@ cert_folder="/opt"
 # Percentage of the container's memory *limit* (charts/nr-metabase
 # values.yaml: metabase.resources.limits.memory), not a fixed size, so the
 # heap scales automatically if that limit ever changes. 60% of the chart's
-# current 1250Mi limit is 750Mi -- the same fixed heap this replaces.
+# current default 4096Mi limit is 2457Mi -- the same fixed heap this replaces.
 MIN_HEAP_PERCENT=${MIN_HEAP_PERCENT:-60}
 MAX_HEAP_PERCENT=${MAX_HEAP_PERCENT:-60}
 
