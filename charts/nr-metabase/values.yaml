@@ -42,7 +42,7 @@ metabase:
       cpu: 250m
       memory: 1200Mi
     limits:
-      memory: 1200Mi
+      memory: 2500Mi
   autoscaling:
     enabled: false
   podSecurityContext: {}
