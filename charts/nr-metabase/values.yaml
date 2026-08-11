@@ -41,12 +41,8 @@ metabase:
     requests:
       cpu: 250m
       memory: 1200Mi
-    # run_app.sh sizes the JVM heap as a percentage of this limit
-    # (-XX:MaxRAMPercentage), not a fixed value, so this ceiling is what
-    # actually bounds the heap now. values.schema.json already documented
-    # 4096Mi as this chart's intended limit; it was just never set here.
     limits:
-      memory: 4096Mi
+      memory: 2000Mi
   autoscaling:
     enabled: false
   podSecurityContext: {}
