@@ -99,7 +99,7 @@ backup:
     mountPath: "/backups/"
     size: 256Mi #Volume space available for data, e.g. 512Mi, 2Gi.
     storageClass: "netapp-file-backup"
-  schedule: "0 0/4 * * *" # cron job schedule
+  schedule: "0 0,4,8,12,16,20 * * *"
   strategy: "rolling" # daily or rolling
   numBackups: 5 # The number of backup files to be retained.  Used for the `daily` backup strategy.  Ignored when using the `rolling` backup strategy.
   dailyBackups: 7 # The number of daily backup files to be retained.  Used for the `rolling` backup strategy.
