@@ -30,7 +30,7 @@ metabase:
   # Track the upstream Metabase image tag used by the deployment template.
   metabaseImage:
     repository: metabase/metabase
-    tag: v0.63.5
+    tag: v0.63.10
   containerPort: 3000
   environment: production
   service:
