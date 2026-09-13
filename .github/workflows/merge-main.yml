@@ -32,9 +32,9 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          PR="$(gh api "repos/${REPO}/commits/${GITHUB_SHA}/pulls" --jq '.[0].number // empty' || true)"
+          PR="$(gh api "repos/${REPO}/commits/${GITHUB_SHA}/pulls" --jq '.[0].number // empty')"
           if [ -z "$PR" ]; then
-            MSG="$(gh api "repos/${REPO}/commits/${GITHUB_SHA}" --jq '.commit.message' | head -n1 || true)"
+            MSG="$(gh api "repos/${REPO}/commits/${GITHUB_SHA}" --jq '.commit.message | split("\n")[0]')"
             if [[ "$MSG" =~ \(\#([0-9]+)\)$ ]]; then
               PR="${BASH_REMATCH[1]}"
             elif [[ "$MSG" =~ Merge\ pull\ request\ \#([0-9]+) ]]; then
