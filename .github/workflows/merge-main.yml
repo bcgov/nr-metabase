@@ -17,24 +17,48 @@ jobs:
     name: Set Variables
     outputs:
       release_exists: ${{ steps.release_check.outputs.release_exists }}
+      image: ${{ steps.tracker.outputs.image }}
     permissions:
       contents: read
       packages: write
+      pull-requests: read
     runs-on: ubuntu-24.04
-    timeout-minutes: 1
+    timeout-minutes: 5
     steps:
-      # Get PR number for squash merges to main
-      - name: PR Number
-        id: pr
-        uses: bcgov/actions/get-pr@4ad61a784f1c17765b03d8d6de9737c1d3f4c0f2 # v0.5.0
       - name: Checkout
         uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Resolve image
+        id: tracker
+        uses: bcgov/actions/image-tracker@v0.6.0
+        with:
+          package: metabase
+          revision: ${{ github.sha }}
+          max_depth: 20
+
+      - name: Require digest
+        if: steps.tracker.outputs.image == ''
+        run: |
+          echo "image-tracker returned no digest" >&2
+          exit 1
+
       - name: Metabase Version
         id: metabase_version
         run: |
           appVersion="$(bash .github/scripts/get-metabase-version.sh)"
           echo "app version is $appVersion"
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
+
+      - name: Tag chart version
+        env:
+          IMAGE: ${{ steps.tracker.outputs.image }}
+          VERSION: ${{ steps.metabase_version.outputs.app_version }}
+          GHCR: ghcr.io/${{ github.repository }}/metabase
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker buildx imagetools create -t "${GHCR}:${VERSION}" "$IMAGE"
 
       - name: Check existing GitHub release
         id: release_check
@@ -46,14 +70,6 @@ jobs:
         env:
           APP_VERSION: ${{ steps.metabase_version.outputs.app_version }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: shrink/actions-docker-registry-tag@e6aaef25c595b6e0edd18bf4c7dbfea3abd43299 # v5
-        with:
-          registry: ghcr.io
-          repository: ${{ github.repository }}/metabase
-          target: ${{ steps.pr.outputs.pr }}
-          tags: |
-            ${{ steps.metabase_version.outputs.app_version }}
 
   helm-release:
     needs: vars
@@ -79,6 +95,7 @@ jobs:
           VERSION="${APP_VERSION#v}"
           echo "APP_VERSION=$APP_VERSION"
           echo "VERSION=$VERSION"
+          echo "IMAGE=${{ needs.vars.outputs.image }}"
           helm package -u --destination=.cr-release-packages --app-version="$APP_VERSION" --version=$VERSION charts/${{ github.event.repository.name }}
 
       - name: Run chart-releaser
