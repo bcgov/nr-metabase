@@ -20,7 +20,7 @@ jobs:
       image: ${{ steps.tracker.outputs.image }}
     permissions:
       contents: read
-      packages: read
+      packages: write
       pull-requests: read
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -50,6 +50,15 @@ jobs:
           appVersion="$(bash .github/scripts/get-metabase-version.sh)"
           echo "app version is $appVersion"
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
+
+      - name: Tag chart version
+        env:
+          IMAGE: ${{ steps.tracker.outputs.image }}
+          VERSION: ${{ steps.metabase_version.outputs.app_version }}
+          GHCR: ghcr.io/${{ github.repository }}/metabase
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker buildx imagetools create -t "${GHCR}:${VERSION}" "$IMAGE"
 
       - name: Check existing GitHub release
         id: release_check
