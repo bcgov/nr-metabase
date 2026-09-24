@@ -44,7 +44,7 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: bcgov/actions/builder@ac9d89eede94f5f58d3446784c94cff634d98eac # v0.6.0
+      - uses: bcgov/actions/builder@6763b12e9c5e7548fe0e63a63e16fe01f0f33b91 # v0.7.0
         with:
           package: metabase
           tags: ${{ github.sha }}
