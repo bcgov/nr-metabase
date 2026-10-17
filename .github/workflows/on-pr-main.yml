@@ -13,6 +13,25 @@ permissions:
   contents: read
 
 jobs:
+  check:
+    name: Check Triggers
+    if: (!github.event.pull_request.head.repo.fork)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      code: ${{ steps.diff.outputs.triggered }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - id: diff
+        uses: bcgov/actions/diff-triggers@79aefe3a7abb2d0d00b1b3ea4cfbf12727a10638 # v0.9.0
+        with:
+          triggers: |
+            .
+            !*.md
+
   extract_version:
     name: Extract Version
     if: (!github.event.pull_request.head.repo.fork)
@@ -38,8 +57,8 @@ jobs:
 
   builds:
     name: Builds
-    needs: extract_version
-    if: (needs.extract_version.outputs.available == 'true')
+    needs: [check, extract_version]
+    if: (needs.check.outputs.code == 'true' && needs.extract_version.outputs.available == 'true')
     runs-on: ubuntu-24.04
     permissions:
       packages: write
@@ -117,3 +136,14 @@ jobs:
             }
 
             retry_with_backoff
+
+  results:
+    name: PR Results
+    needs: [check, extract_version, builds, deploys]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    steps:
+      - uses: bcgov/actions/workflow-results@79aefe3a7abb2d0d00b1b3ea4cfbf12727a10638 # v0.9.0
+        with:
+          needs: ${{ toJson(needs) }}
