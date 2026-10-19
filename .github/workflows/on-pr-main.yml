@@ -102,16 +102,16 @@ jobs:
               while [ $attempt -le $max_attempts ]; do
                 echo "Deployment attempt $attempt/$max_attempts"
 
-                # Deploy Helm Chart
+                # Deploy Helm Chart; capture the exit code so a failed attempt
+                # retries instead of ending the step (commands run under bash -e)
+                exit_code=0
                 timeout $timeout helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} \
                   --set-literal metabase.dbHostPortEnv="${DB_HOST_PORT}" \
                   --set-string global.secrets.databasePassword="${{ secrets.DB_PASSWORD}}" \
                   --set-string global.zone="${{ github.event.number }}" \
                   --set-string metabase.metabaseImage.tag="${{ github.sha }}" \
                   --set-string namespace="${{ vars.oc_namespace }}" \
-                  --timeout 5m charts/nr-metabase --debug
-
-                exit_code=$?
+                  --timeout 5m charts/nr-metabase --debug || exit_code=$?
 
                 if [ $exit_code -eq 0 ]; then
                   echo "Deployment succeeded on attempt $attempt"
