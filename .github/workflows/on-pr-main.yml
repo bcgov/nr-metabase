@@ -24,7 +24,7 @@ jobs:
     outputs:
       code: ${{ steps.diff.outputs.triggered }}
     steps:
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: diff
         uses: bcgov/actions/diff-triggers@79aefe3a7abb2d0d00b1b3ea4cfbf12727a10638 # v0.9.0
         with:
@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Extract Version
         id: read_yaml
         shell: bash
@@ -80,6 +80,8 @@ jobs:
   deploys:
     name: Deploys
     needs: [builds]
+    # Dependabot runs get no Actions secrets, so there is no OC_TOKEN to log in with
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
