@@ -92,10 +92,19 @@ jobs:
           oc_token: ${{ secrets.OC_TOKEN }}
           oc_server: ${{ vars.OC_SERVER }}
           commands: |
+            # Clear this PR's release if an earlier run left it failed or pending,
+            # since upgrade --install refuses a release with no deployed revision
+            release=nr-metabase-${{ github.event.number }}
+            status=$(helm status "$release" -o json 2>/dev/null | jq -r '.info.status' || true)
+            if [ -n "$status" ] && [ "$status" != "deployed" ]; then
+              echo "Release $release is '$status'; uninstalling before deploy"
+              helm uninstall "$release" --wait --timeout 1m
+            fi
+
             # Helm waits up to 5m for readiness; on failure --atomic rolls the
             # release back. The outer timeout adds 3m of headroom so that
-            # rollback finishes and never leaves a stuck release. One 8m
-            # attempt fits inside oc-runner's 10m limit; a second does not.
+            # rollback finishes and never leaves a stuck release. The 1m cleanup plus
+            # one 8m attempt fit inside oc-runner's 10m limit; a second does not.
             timeout 8m helm upgrade --install --wait --atomic nr-metabase-${{ github.event.number }} \
               --set-literal metabase.dbHostPortEnv="${DB_HOST_PORT}" \
               --set-string global.secrets.databasePassword="${{ secrets.DB_PASSWORD}}" \
