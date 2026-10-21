@@ -61,7 +61,7 @@ database:
     repository: docker.io/library/postgres
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "15.14"
+    tag: "18.4"
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
