@@ -58,7 +58,7 @@ database:
   fullnameOverride: ""
   deploymentStrategy: Recreate
   image:
-    repository: artifacts.developer.gov.bc.ca/github-docker-remote/bcgov/nr-containers/postgres
+    repository: ghcr.io/bcgov/nr-containers/postgres
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: "15.14"
