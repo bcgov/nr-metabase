@@ -42,19 +42,12 @@ jobs:
                 echo "Cleanup attempt $attempt/$max_attempts"
 
                 # Remove old build runs, build pods and deployment pods
-                timeout $timeout helm uninstall nr-metabase-${{ github.event.number }}
-
-                exit_code=$?
+                # --ignore-not-found: PRs that never deployed have no release
+                exit_code=0
+                timeout $timeout helm uninstall --ignore-not-found nr-metabase-${{ github.event.number }} || exit_code=$?
 
                 if [ $exit_code -eq 0 ]; then
                   echo "Cleanup succeeded on attempt $attempt"
-                  return 0
-                fi
-
-                # Check if error is "not found" (exit code 1, release not found)
-                # In that case, treat as success since cleanup is complete
-                if [ $exit_code -eq 1 ]; then
-                  echo "Release not found (already cleaned up). Treating as success."
                   return 0
                 fi
 
