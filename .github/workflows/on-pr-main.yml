@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.1
       - id: diff
-        uses: bcgov/actions/diff-triggers@79aefe3a7abb2d0d00b1b3ea4cfbf12727a10638 # v0.9.0
+        uses: bcgov/actions/diff-triggers@122a9b1c6c082b1b1f18c300020fbdc417b6b0b2 # v0.10.0
         with:
           triggers: |
             .
@@ -63,7 +63,7 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: bcgov/actions/builder@79aefe3a7abb2d0d00b1b3ea4cfbf12727a10638 # v0.9.0
+      - uses: bcgov/actions/builder@122a9b1c6c082b1b1f18c300020fbdc417b6b0b2 # v0.10.0
         with:
           package: metabase
           tags: ${{ github.sha }}
@@ -84,7 +84,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Deploy to OpenShift
-        uses: bcgov/actions-openshift/oc-runner@4dbe4f6d25d14cbdb01e525a302e61e31f96c3ed # v0.5.0
+        uses: bcgov/actions-openshift/oc-runner@46f2614322f7ba1a5ad88a7e4e1b98569c80dcf7 # v0.6.0
         env:
           DB_HOST_PORT: ${{ secrets.DB_HOST_PORT_ENV }}
         with:
@@ -120,6 +120,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 1
     steps:
-      - uses: bcgov/actions/workflow-results@79aefe3a7abb2d0d00b1b3ea4cfbf12727a10638 # v0.9.0
+      - uses: bcgov/actions/workflow-results@122a9b1c6c082b1b1f18c300020fbdc417b6b0b2 # v0.10.0
         with:
           needs: ${{ toJson(needs) }}
