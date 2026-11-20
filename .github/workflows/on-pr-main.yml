@@ -84,7 +84,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Deploy to OpenShift
-        uses: bcgov/actions-openshift/oc-runner@a7a039ba45f9635c0bdbcc6b4cdbd2555811e100 # v0.8.0
+        uses: bcgov/actions-openshift/oc-runner@45d8c7f7d0d5e3b15786cb99a83f410e01547133 # v0.9.0
         env:
           DB_HOST_PORT: ${{ secrets.DB_HOST_PORT_ENV }}
         with:
