@@ -64,6 +64,8 @@ JAVA_OPTS=(
   -XX:+UseCompactObjectHeaders
   -XX:MaxMetaspaceSize=400m
   -XX:+ExitOnOutOfMemoryError
+  # Mitigate Java4Shell (CVE-2026-114938 / GHSA-69v7-pwxv-xxr3) on x86-64 AVX-512 hosts
+  -XX:-UseBASE64Intrinsics
 )
 
 if [ -f /config/log4j2.xml ]; then
