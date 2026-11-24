@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Presets from https://github.com/bcgov/renovate-config",
+  "extends": [
+    "github>bcgov/renovate-config#2026.10.29"
+  ],
+  "packageRules": [
+    {
+      "description": "Pinned to v1.5.0: v1.6.0+ crashes with 'latest_tag: unbound variable' when skip_packaging is true (helm/chart-releaser-action#171)",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "helm/chart-releaser-action"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Suppress Docker patch bumps for non-Metabase container images",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "docker.io/library/postgres",
+        "postgres",
+        "bcgovimages/backup-container"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "enabled": false
+    }
+  ]
+}
