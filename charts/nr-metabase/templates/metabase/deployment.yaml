@@ -26,7 +26,7 @@ spec:
         - name: {{ include "metabase.fullname" . }}
           securityContext:
             {{- toYaml .Values.metabase.securityContext | nindent 12 }}
-          image: "ghcr.io/bcgov/nr-metabase/metabase:{{ .Values.metabase.metabaseImage.tag | default .Chart.AppVersion }}"
+          image: "ghcr.io/bcgov/nr-metabase/metabase:{{ .Values.metabase.metabaseImage.tag }}"
           imagePullPolicy: {{ .Values.metabase.image.pullPolicy }}
           env:
             - name: MB_DB_DBNAME
@@ -64,7 +64,7 @@ spec:
             - name: MB_PASSWORD_COMPLEXITY
               value: strong
             - name: NR_MB_VERSION
-              value: {{ .Values.metabase.metabaseImage.tag | default .Chart.AppVersion }}
+              value: {{ .Values.metabase.metabaseImage.tag }}
             {{- if .Values.metabase.dbHostPortEnv }}
             - name: DB_HOST_PORT_ENV
               value: {{ .Values.metabase.dbHostPortEnv | quote }}
