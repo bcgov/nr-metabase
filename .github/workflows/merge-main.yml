@@ -5,9 +5,13 @@ on:
     branches: [main]
     paths-ignore:
       - "*.md"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/merge-main.yml"
   workflow_dispatch:
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 permissions: {}
@@ -15,6 +19,7 @@ permissions: {}
 jobs:
   vars:
     name: Set Variables
+    if: (!github.event.pull_request.head.repo.fork)
     outputs:
       release_exists: ${{ steps.release_check.outputs.release_exists }}
       image: ${{ steps.tracker.outputs.image }}
@@ -26,7 +31,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -34,7 +39,7 @@ jobs:
         id: tracker
         uses: bcgov/actions/image-tracker@d209bb08aabe15e5e69aca53b24d338a7b2843d5 # v0.12.0
         with:
-          package: metabase
+          packages: metabase
           revision: ${{ github.sha }}
           max_depth: 20
 
@@ -52,6 +57,7 @@ jobs:
           echo "app_version=$appVersion" >> "$GITHUB_OUTPUT"
 
       - name: Tag chart version
+        if: github.event_name != 'pull_request'
         env:
           IMAGE: ${{ steps.tracker.outputs.image }}
           VERSION: ${{ steps.metabase_version.outputs.app_version }}
@@ -61,6 +67,7 @@ jobs:
           docker buildx imagetools create -t "${GHCR}:${VERSION}" "$IMAGE"
 
       - name: Check existing GitHub release
+        if: github.event_name != 'pull_request'
         id: release_check
         shell: bash
         run: |
@@ -73,13 +80,13 @@ jobs:
 
   helm-release:
     needs: vars
-    if: needs.vars.outputs.release_exists != 'true'
+    if: github.event_name != 'pull_request' && needs.vars.outputs.release_exists != 'true'
     permissions:
       contents: write
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -96,7 +103,7 @@ jobs:
           echo "APP_VERSION=$APP_VERSION"
           echo "VERSION=$VERSION"
           echo "IMAGE=${{ needs.vars.outputs.image }}"
-          helm package -u --destination=.cr-release-packages --app-version="$APP_VERSION" --version=$VERSION charts/${{ github.event.repository.name }}
+          helm package -u --destination=.cr-release-packages --app-version="$APP_VERSION" --version="$VERSION" "charts/${{ github.event.repository.name }}"
 
       - name: Run chart-releaser
         # Pinned to v1.5.0: v1.6.0+ has a regression where cr.sh crashes with
