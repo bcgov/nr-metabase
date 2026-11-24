@@ -27,10 +27,9 @@ metabase:
   image:
     repository: ghcr.io/bcgov/nr-metabase/metabase
     pullPolicy: Always
-  # Track the upstream Metabase image tag used by the deployment template.
+  # Overrides the image tag whose default is the chart appVersion.
   metabaseImage:
-    repository: metabase/metabase
-    tag: v0.65.6
+    tag: ""
   containerPort: 3000
   environment: production
   service:

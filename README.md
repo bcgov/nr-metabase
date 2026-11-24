@@ -134,7 +134,7 @@ All values live in `charts/nr-metabase/values.yaml` and are validated against `v
 |---|---|---|
 | `metabase.enabled` | `true` | Toggle the Metabase component. |
 | `metabase.replicaCount` | `1` | Pod replicas (Metabase is not horizontally scalable by default). |
-| `metabase.metabaseImage.tag` | `vx.x.x` | Metabase version deployed by the pod. |
+| `metabase.metabaseImage.tag` | `""` | Override the Metabase image tag (defaults to `Chart.yaml` `appVersion`). |
 | `metabase.dbHostPortEnv` | `~` | Comma-separated `host:port` list of Oracle endpoints whose TLS certs are imported at startup. |
 | `metabase.service.port` / `targetPort` | `80` / `3000` | Service port mapping. |
 | `metabase.resources.requests` | `250m` CPU / `1200Mi` | Resource requests. |
@@ -376,15 +376,11 @@ If your team needs shorter upgrade windows, schedule upgrades outside busy hours
 
 ### Why did my merged PR not create a new chart release?
 
-The chart version is not a value you set directly. `merge-main.yml` builds it from two files:
-- `metabase.metabaseImage.tag`, in `values.yaml`
-- `appVersion`, in `Chart.yaml`
-
-These two values must match. The workflow uses this matched value as the release version.
+The chart version is not a value you set directly. `merge-main.yml` builds it from `Chart.yaml` (`appVersion`, which must match `version` without the `v` prefix).
 
 If a release with that version number already exists, the workflow skips the release step. It does not publish a new chart. This happens even when your merged PR changed chart templates, `values.yaml`, or other files.
 
-To publish a chart-only change, bump the Metabase version in both files. You can also ask a maintainer about a different release process for chart-only fixes.
+To publish a chart-only change, bump `version` and `appVersion` in `Chart.yaml`. You can also ask a maintainer about a different release process for chart-only fixes.
 
 ### Why does my PR review environment disappear after I close the PR?
 

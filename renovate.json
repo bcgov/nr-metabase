@@ -4,7 +4,43 @@
   "extends": [
     "github>bcgov/renovate-config#2026.10.29"
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track Metabase version in Chart.yaml appVersion",
+      "managerFilePatterns": [
+        "/^charts/nr-metabase/Chart\\.yaml$/"
+      ],
+      "matchStrings": [
+        "(?:^|\\r\\n|\\r|\\n)appVersion:\\s*\"(?<currentValue>v\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "metabase/metabase",
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^(?<version>v\\d+\\.\\d+\\.\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "Track Metabase version in Chart.yaml version",
+      "managerFilePatterns": [
+        "/^charts/nr-metabase/Chart\\.yaml$/"
+      ],
+      "matchStrings": [
+        "(?:^|\\r\\n|\\r|\\n)version:\\s*(?<currentValue>\\d+\\.\\d+\\.\\d+)(?:\\s|\\r|\\n|$)"
+      ],
+      "depNameTemplate": "metabase/metabase",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+\\.\\d+)$"
+    }
+  ],
   "packageRules": [
+    {
+      "description": "Group Chart.yaml version and appVersion bumps for Metabase into one PR",
+      "matchPackageNames": [
+        "metabase/metabase"
+      ],
+      "groupName": "metabase"
+    },
     {
       "description": "Pinned to v1.5.0: v1.6.0+ crashes with 'latest_tag: unbound variable' when skip_packaging is true (helm/chart-releaser-action#171)",
       "matchManagers": [
