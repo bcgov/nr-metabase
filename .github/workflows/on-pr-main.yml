@@ -16,7 +16,7 @@ jobs:
   check:
     name: Check Triggers
     if: (!github.event.pull_request.head.repo.fork)
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 2
     permissions:
       contents: read
@@ -35,7 +35,7 @@ jobs:
   extract_version:
     name: Extract Version
     if: (!github.event.pull_request.head.repo.fork)
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       app_version: ${{ steps.read_yaml.outputs.app_version }}
       available: ${{ steps.read_yaml.outputs.available }}
@@ -59,7 +59,7 @@ jobs:
     name: Builds
     needs: [check, extract_version]
     if: (needs.check.outputs.code == 'true' && needs.extract_version.outputs.available == 'true')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       packages: write
     steps:
@@ -80,7 +80,7 @@ jobs:
   deploys:
     name: Deploys
     needs: [builds]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 60
     steps:
       - name: Deploy to OpenShift
@@ -117,7 +117,7 @@ jobs:
     name: PR Results
     needs: [check, extract_version, builds, deploys]
     if: always()
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 1
     steps:
       - uses: bcgov/actions/workflow-results@d209bb08aabe15e5e69aca53b24d338a7b2843d5 # v0.12.0
